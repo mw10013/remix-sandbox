@@ -12,7 +12,10 @@
     "@remix-run/node": "^1.18.1",
     "@remix-run/react": "^1.18.1",
     "@remix-run/serve": "^1.18.1",
+    "ai": "^2.1.16",
     "isbot": "^3.6.12",
+    "langchain": "^0.0.104",
+    "openai": "^3.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
