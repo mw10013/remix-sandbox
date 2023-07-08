@@ -1,4 +1,5 @@
 import type { V2_MetaFunction } from "@remix-run/node";
+import { Button } from "~/components/ui/button";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -11,7 +12,10 @@ export default function Index() {
   return (
     <div>
       <h1 className="text-gray-500 text-2xl">Remix Sandbox</h1>
-      <ul>
+      <div>
+        <Button>Click me</Button>
+      </div>
+      {/* <ul>
         <li>
           <a
             target="_blank"
@@ -35,7 +39,7 @@ export default function Index() {
             Remix Docs
           </a>
         </li>
-      </ul>
+      </ul> */}
     </div>
   );
 }
