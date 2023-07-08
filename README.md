@@ -1,3 +1,8 @@
+
+## Supabase
+
+- psql postgresql://postgres:postgres@localhost:54322/postgres
+
 # Welcome to Remix!
 
 - [Remix Docs](https://remix.run/docs)
