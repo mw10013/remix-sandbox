@@ -1,9 +1,26 @@
-import { json, type ActionArgs } from "@remix-run/node";
+import { type ActionArgs } from "@remix-run/node";
+// import { Configuration, OpenAIApi } from "openai";
+import { Configuration, OpenAIApi } from "openai-edge";
+import { OpenAIStream, StreamingTextResponse } from "~/lib/ai-hacks";
+
+export const runtime = "edge";
+
+const config = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(config);
 
 export const action = async ({ request }: ActionArgs) => {
-  const data = await request.json();
-  console.log(data);
-  return json({ message: `server hello world: ${new Date()}` });
+  const { messages } = await request.json();
+  console.log(messages);
+  //   return json({ message: `server hello world: ${new Date()}` });
+  const response = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages,
+    stream: true,
+  });
+  const stream = OpenAIStream(response);
+  return new StreamingTextResponse(stream);
 
   // const { messages, transcriptId } = z
   //     .object({
