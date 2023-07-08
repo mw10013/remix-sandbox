@@ -67,8 +67,9 @@ export function OpenAIStream(response: Response): ReadableStream<any> {
 
   const responseBodyStream = toPolyfillReadable(response.body);
 
-  // @ts-expect-error bad types
+  // @ts-expect-error
   return toNativeReadable(
+    // @ts-expect-error
     responseBodyStream.pipeThrough(
       createEventStreamTransformer(parseOpenAIStream())
     )
