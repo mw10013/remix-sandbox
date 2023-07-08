@@ -1,6 +1,7 @@
 
 ## Supabase
 
+- pnpm supabase gen types typescript --local > ./types/database.ts
 - psql postgresql://postgres:postgres@localhost:54322/postgres
 
 # Welcome to Remix!
