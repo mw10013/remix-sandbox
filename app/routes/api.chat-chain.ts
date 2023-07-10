@@ -2,8 +2,11 @@ import { type ActionArgs } from "@remix-run/node";
 import { StreamingTextResponse, LangChainStream } from "ai";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { LLMChain } from "langchain";
-import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from "langchain/prompts";
-
+import {
+  ChatPromptTemplate,
+  HumanMessagePromptTemplate,
+  SystemMessagePromptTemplate,
+} from "langchain/prompts";
 
 export const action = async ({ request }: ActionArgs) => {
   const { messages } = await request.json();
@@ -21,7 +24,7 @@ export const action = async ({ request }: ActionArgs) => {
 
   const prompt = ChatPromptTemplate.fromPromptMessages([
     SystemMessagePromptTemplate.fromTemplate(
-      "You are a helpful assistant that responds in the language of the king james version of the bible."
+      "You are a laconic assistant that responds concisely"
     ),
     HumanMessagePromptTemplate.fromTemplate("{text}"),
   ]);
@@ -30,8 +33,6 @@ export const action = async ({ request }: ActionArgs) => {
     prompt,
     llm,
   });
-  chain
-    .call({text: question}, [handlers])
-    .catch(console.error);
+  chain.call({ text: question }, [handlers]).catch(console.error);
   return new StreamingTextResponse(stream);
 };
