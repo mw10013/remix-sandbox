@@ -12,7 +12,7 @@ export const action = async ({ request }: ActionArgs) => {
   console.log("chat-chain: ", question);
 
   const { stream, handlers } = LangChainStream();
-  const chat = new ChatOpenAI({
+  const llm = new ChatOpenAI({
     modelName: "gpt-3.5-turbo",
     temperature: 0,
     maxRetries: 1,
@@ -28,7 +28,7 @@ export const action = async ({ request }: ActionArgs) => {
 
   const chain = new LLMChain({
     prompt,
-    llm: chat,
+    llm,
   });
   chain
     .call({text: question}, [handlers])
