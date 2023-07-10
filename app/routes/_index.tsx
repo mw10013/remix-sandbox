@@ -12,7 +12,7 @@ export const meta: V2_MetaFunction = () => {
 
 export default function Index() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
-    api: "/api/chat-messages",
+    api: "/api/chat-chain",
   });
   return (
     <div className="mx-auto w-full max-w-md py-24 flex flex-col stretch">
