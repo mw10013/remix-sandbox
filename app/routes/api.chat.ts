@@ -4,8 +4,6 @@ import type { Message } from "ai";
 import { StreamingTextResponse, LangChainStream } from "ai";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 
-export const runtime = "edge";
-
 export const action = async ({ request }: ActionArgs) => {
   const { messages } = await request.json();
   console.log(messages);

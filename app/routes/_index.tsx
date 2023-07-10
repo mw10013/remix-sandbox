@@ -1,7 +1,7 @@
 import type { V2_MetaFunction } from "@remix-run/node";
-// import { useFetcher } from "@remix-run/react";
-// import { Button } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 import { useChat } from "ai/react";
+import { Input } from "~/components/ui/input";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -11,9 +11,9 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export default function Index() {
-  // const fetcher = useFetcher();
-  // console.log({ data: fetcher.data, json: fetcher.json });
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
+    api: "/api/chat",
+  });
   return (
     <div className="mx-auto w-full max-w-md py-24 flex flex-col stretch">
       {messages.map((m) => (
@@ -22,43 +22,10 @@ export default function Index() {
           {m.content}
         </div>
       ))}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Say something...
-          <input
-            className="fixed w-full max-w-md bottom-0 border border-gray-300 rounded mb-8 shadow-xl p-2"
-            value={input}
-            onChange={handleInputChange}
-          />
-        </label>
-        <button type="submit">Send</button>
+      <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
+        <Input value={input} onChange={handleInputChange} />
+        <Button type="submit">Send</Button>
       </form>
     </div>
-    // <div>
-    //   <h1 className="text-gray-500 text-2xl">Remix Sandbox</h1>
-    //   <div>Data: {JSON.stringify(fetcher.data, null, 2)}</div>
-    //   <div>
-    //     <Button
-    //       onClick={(e) => {
-    //         fetcher.submit(
-    //           {
-    //             messages: [
-    //               { role: "system", content: "You are a helpful assistant." },
-    //               { role: "user", content: "Hello!" },
-    //             ],
-    //           },
-    //           {
-    //             method: "POST",
-    //             action: "/api/chat",
-    //             encType: "application/json",
-    //             replace: true,
-    //           }
-    //         );
-    //       }}
-    //     >
-    //       Click me
-    //     </Button>
-    //   </div>
-    // </div>
   );
 }
