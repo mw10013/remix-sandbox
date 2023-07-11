@@ -15,7 +15,7 @@ export const action = async ({ request }: ActionArgs) => {
   console.log("chat-chain: ", question);
 
   const { stream, handlers } = LangChainStream();
-  const llm = new ChatOpenAI({
+  const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo",
     temperature: 0,
     maxRetries: 1,
@@ -26,13 +26,13 @@ export const action = async ({ request }: ActionArgs) => {
     SystemMessagePromptTemplate.fromTemplate(
       "You are a laconic assistant that responds concisely"
     ),
-    HumanMessagePromptTemplate.fromTemplate("{text}"),
+    HumanMessagePromptTemplate.fromTemplate("{question}"),
   ]);
 
   const chain = new LLMChain({
     prompt,
-    llm,
+    llm: chat,
   });
-  chain.call({ text: question }, [handlers]).catch(console.error);
+  chain.call({ question }, [handlers]).catch(console.error);
   return new StreamingTextResponse(stream);
 };
