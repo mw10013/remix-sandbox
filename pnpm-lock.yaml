@@ -26,8 +26,8 @@ dependencies:
     specifier: ^2.26.0
     version: 2.26.0
   ai:
-    specifier: ^2.1.17
-    version: 2.1.17(react@18.2.0)(svelte@4.0.5)(vue@3.3.4)
+    specifier: ^2.1.18
+    version: 2.1.18(react@18.2.0)(svelte@4.0.5)(vue@3.3.4)
   class-variance-authority:
     specifier: ^0.6.1
     version: 0.6.1
@@ -41,11 +41,14 @@ dependencies:
     specifier: ^3.6.12
     version: 3.6.12
   langchain:
-    specifier: ^0.0.104
-    version: 0.0.104(@supabase/supabase-js@2.26.0)
+    specifier: ^0.0.106
+    version: 0.0.106(@supabase/supabase-js@2.26.0)
   lucide-react:
     specifier: ^0.259.0
     version: 0.259.0(react@18.2.0)
+  nanoid:
+    specifier: ^4.0.2
+    version: 4.0.2
   openai-edge:
     specifier: ^1.2.0
     version: 1.2.0
@@ -2902,8 +2905,8 @@ packages:
     resolution: {integrity: sha512-hCOfMzbFx5IDutmWLAt6MZwOUjIfSM9G9FyVxytmE4Rs/5YDPWQrD/+IR1w+FweD9H2oOZEnv36TmkjhNURBVA==}
     dev: true
 
-  /ai@2.1.17(react@18.2.0)(svelte@4.0.5)(vue@3.3.4):
-    resolution: {integrity: sha512-3dcg7cjDQdFeYbKREvJ18WhNrN+IVhASJPEolOiZINfmQ5qjqZHWNagqLsN8Wi2RYzD3CrskrN8KwAobUTgo9g==}
+  /ai@2.1.18(react@18.2.0)(svelte@4.0.5)(vue@3.3.4):
+    resolution: {integrity: sha512-mHrhaXhUVeYw0y1d9XyEYIc+3gXgl9MifcjXPAF2rwg9bdXUWnTxhuNval7dGTc9Ws7Du1c7Ul4tiBM+D2QGtQ==}
     engines: {node: '>=14.6'}
     peerDependencies:
       react: ^18.2.0
@@ -5804,8 +5807,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /langchain@0.0.104(@supabase/supabase-js@2.26.0):
-    resolution: {integrity: sha512-VmRMvUQt7599XU68fpMNY3eT3fY+MPgzxSf8tRP31WMs5GRv8A61mDRYWCY1KPBONxDvJqySGVMEIOb16aQebg==}
+  /langchain@0.0.106(@supabase/supabase-js@2.26.0):
+    resolution: {integrity: sha512-L9S/NuzsJy5GeJj+azCsjfw77QQhfpfYX3cEbVxYIZ7HdDUsrXTVnqMnJnOmDH4KEMcLsCUm2sctRPfwvZX+Iw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@aws-sdk/client-dynamodb': ^3.310.0
@@ -5835,7 +5838,7 @@ packages:
       apify-client: ^2.7.1
       axios: '*'
       cheerio: ^1.0.0-rc.12
-      chromadb: ^1.5.2
+      chromadb: ^1.5.3
       cohere-ai: ^5.0.2
       d3-dsv: ^2.0.0
       epub2: ^3.0.1
@@ -5990,7 +5993,7 @@ packages:
       uuid: 9.0.0
       yaml: 2.3.1
       zod: 3.21.4
-      zod-to-json-schema: 3.21.3(zod@3.21.4)
+      zod-to-json-schema: 3.21.4(zod@3.21.4)
     transitivePeerDependencies:
       - debug
       - encoding
@@ -6806,6 +6809,12 @@ packages:
     resolution: {integrity: sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  /nanoid@4.0.2:
+    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
+    engines: {node: ^14 || ^16 || >=18}
+    hasBin: true
+    dev: false
 
   /natural-compare-lite@1.4.0:
     resolution: {integrity: sha512-Tj+HTDSJJKaZnfiuw+iaF9skdPpTo2GtEly5JHnWV/hfv2Qj/9RKsGISQtLh2ox3l5EAGw487hnBee0sIJ6v2g==}
@@ -9086,8 +9095,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zod-to-json-schema@3.21.3(zod@3.21.4):
-    resolution: {integrity: sha512-09W/9oyxeF1/wWnzCb6MursW+lOzgKi91QwE7eTBbC+t/qgfuLsUVDai3lHemSQnQu/UONAcT/fv3ZnDvbTeKg==}
+  /zod-to-json-schema@3.21.4(zod@3.21.4):
+    resolution: {integrity: sha512-fjUZh4nQ1s6HMccgIeE0VP4QG/YRGPmyjO9sAh890aQKPEk3nqbfUXhMFaC+Dr5KvYBm8BCyvfpZf2jY9aGSsw==}
     peerDependencies:
       zod: ^3.21.4
     dependencies:

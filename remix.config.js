@@ -6,6 +6,9 @@ module.exports = {
   // serverBuildPath: "build/index.js",
   // publicPath: "/build/",
   serverModuleFormat: "cjs",
+  serverDependenciesToBundle: [
+    "nanoid",
+  ],
   tailwind: true,
   future: {
     v2_dev: true,
