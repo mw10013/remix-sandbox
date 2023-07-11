@@ -88,8 +88,8 @@ devDependencies:
     specifier: ^0.3.0
     version: 0.3.0
   supabase:
-    specifier: ^1.75.3
-    version: 1.75.3
+    specifier: ^1.77.6
+    version: 1.77.6
   tailwindcss:
     specifier: ^3.3.2
     version: 3.3.2
@@ -2336,8 +2336,8 @@ packages:
       - encoding
     dev: false
 
-  /@supabase/gotrue-js@2.39.1:
-    resolution: {integrity: sha512-qRz9mBleA/QATGKOdMAUjpn+YcbZJrTHyWQCe2hAFqJo15JIe1XziD1ZeFraRpsXwja+vONslGeynGv7H8ZZeQ==}
+  /@supabase/gotrue-js@2.39.2:
+    resolution: {integrity: sha512-3M0P+0EP4cQLLsEhTxn17sP3riwZ37gWUv8k7s/4vBCMhRQR6PsF9RvybVyllPqm0Z9gfZAK3y1NUS53WqurcA==}
     dependencies:
       cross-fetch: 3.1.8
     transitivePeerDependencies:
@@ -2374,7 +2374,7 @@ packages:
     resolution: {integrity: sha512-RXmTPTobaYAwkSobadHZmEVLmzX3SGrtRZIGfLWnLv92VzBRrjuXn0a+bJqKl50GUzsyqPA+j5pod7EwMkcH5A==}
     dependencies:
       '@supabase/functions-js': 2.1.2
-      '@supabase/gotrue-js': 2.39.1
+      '@supabase/gotrue-js': 2.39.2
       '@supabase/postgrest-js': 1.7.2
       '@supabase/realtime-js': 2.7.3
       '@supabase/storage-js': 2.5.1
@@ -2513,6 +2513,11 @@ packages:
 
   /@types/node@20.4.0:
     resolution: {integrity: sha512-jfT7iTf/4kOQ9S7CHV9BIyRaQqHu67mOjsIQBC3BKZvzvUB6zLxEwJ6sBE3ozcvP8kF6Uk5PXN0Q+c0dfhGX0g==}
+    dev: true
+
+  /@types/node@20.4.1:
+    resolution: {integrity: sha512-JIzsAvJeA/5iY6Y/OxZbv1lUcc8dNSE77lb2gnBH+/PJ3lFR1Ccvgwl5JWnHAkNHcRsT0TbpVOsiMKZ1F/yyJg==}
+    dev: false
 
   /@types/phoenix@1.6.0:
     resolution: {integrity: sha512-qwfpsHmFuhAS/dVd4uBIraMxRd56vwBUYQGZ6GpXnFuM2XMRFJbIyruFKKlW2daQliuYZwe0qfn/UjFCDKic5g==}
@@ -2565,7 +2570,7 @@ packages:
   /@types/websocket@1.0.5:
     resolution: {integrity: sha512-NbsqiNX9CnEfC1Z0Vf4mE1SgAJ07JnRYcNex7AJ9zAVzmiGHmjKFEk7O4TJIsgv2B1sLEb6owKFZrACwdYngsQ==}
     dependencies:
-      '@types/node': 20.4.0
+      '@types/node': 20.4.1
     dev: false
 
   /@typescript-eslint/eslint-plugin@5.61.0(@typescript-eslint/parser@5.61.0)(eslint@8.44.0)(typescript@5.1.6):
@@ -3187,8 +3192,8 @@ packages:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
     dev: true
 
-  /bin-links@4.0.1:
-    resolution: {integrity: sha512-bmFEM39CyX336ZGGRsGPlc6jZHriIoHacOQcTt72MktIjpPhZoP4te2jOyUXF3BLILmJ8aNLncoPVeIIFlrDeA==}
+  /bin-links@4.0.2:
+    resolution: {integrity: sha512-jxJ0PbXR8eQyPlExCvCs3JFnikvs1Yp4gUJt6nmgathdOwvur+q22KWC3h20gvWl4T/14DXKj2IlkJwwZkZPOw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
       cmd-shim: 6.0.1
@@ -8295,13 +8300,13 @@ packages:
       pirates: 4.0.6
       ts-interface-checker: 0.1.13
 
-  /supabase@1.75.3:
-    resolution: {integrity: sha512-o6rd6v09QstJACYbcNPHaPPnCSi6CO5o2g4ZiZ45V+RYBQasPk8UCOqzJEzi/Ahizq3rb1bJBdwYdEpDmlepPg==}
+  /supabase@1.77.6:
+    resolution: {integrity: sha512-eBVTStN/55RMmf2pNTpmd28afNj5Pn7ta0JudpWDylcaIJH0W+oAnuWdwovCkFWIa5W+nBwoajYRvQKHzwMkkQ==}
     engines: {npm: '>=8'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      bin-links: 4.0.1
+      bin-links: 4.0.2
       node-fetch: 3.3.1
       tar: 6.1.15
     dev: true
