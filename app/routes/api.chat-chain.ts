@@ -6,13 +6,22 @@ import {
   ChatPromptTemplate,
   HumanMessagePromptTemplate,
   SystemMessagePromptTemplate,
+  MessagesPlaceholder
 } from "langchain/prompts";
 
 export const action = async ({ request }: ActionArgs) => {
+  // [
+  //   { role: 'user', content: "w'sup" },
+  //   { role: 'assistant', content: 'Not much.' },
+  //   { role: 'user', content: 'chill' },
+  //   { role: 'assistant', content: 'OK.' },
+  //   { role: 'user', content: 'peace' }
+  // ]
   const { messages } = await request.json();
   console.log(messages);
+  const historicalMessages = messages.slice(0, messages.length - 1);
   const { content: question } = messages[messages.length - 1];
-  console.log("chat-chain: ", question);
+  console.log({historicalMessages, question});
 
   const { stream, handlers } = LangChainStream();
   const chat = new ChatOpenAI({
@@ -28,6 +37,8 @@ export const action = async ({ request }: ActionArgs) => {
     ),
     HumanMessagePromptTemplate.fromTemplate("{question}"),
   ]);
+
+  prompt.formatMessages({ question }).then(console.log);
 
   const chain = new LLMChain({
     prompt,
