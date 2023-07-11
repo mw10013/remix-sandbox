@@ -19,8 +19,10 @@ export const action = async ({ request }: ActionArgs) => {
   //   { role: 'assistant', content: 'OK.' },
   //   { role: 'user', content: 'peace' }
   // ]
-  const { messages } = await request.json();
-  console.log(messages);
+  const json = await request.json();
+  console.log({ json });
+  const { messages } = json;
+//   console.log(messages);
   const historicalMessages = messages.slice(0, messages.length - 1);
   const { content: question } = messages[messages.length - 1];
   console.log({ historicalMessages, question });
@@ -41,17 +43,6 @@ export const action = async ({ request }: ActionArgs) => {
     new MessagesPlaceholder("historicalMessages"),
     HumanMessagePromptTemplate.fromTemplate("{question}"),
   ]);
-
-  // prompt
-  //   .formatMessages({
-  //     question,
-  //     historicalMessages: (historicalMessages as Message[]).map((m) =>
-  //       m.role == "user"
-  //         ? new HumanMessage(m.content)
-  //         : new AIMessage(m.content)
-  //     ),
-  //   })
-  //   .then(console.log);
 
   const chain = new LLMChain({
     prompt,
