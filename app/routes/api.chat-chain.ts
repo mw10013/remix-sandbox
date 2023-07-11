@@ -37,20 +37,21 @@ export const action = async ({ request }: ActionArgs) => {
     SystemMessagePromptTemplate.fromTemplate(
       "You are a laconic assistant that responds concisely"
     ),
+    // https://js.langchain.com/docs/modules/memory/examples/buffer_memory_chat
     new MessagesPlaceholder("historicalMessages"),
     HumanMessagePromptTemplate.fromTemplate("{question}"),
   ]);
 
-  prompt
-    .formatMessages({
-      question,
-      historicalMessages: (historicalMessages as Message[]).map((m) =>
-        m.role == "user"
-          ? new HumanMessage(m.content)
-          : new AIMessage(m.content)
-      ),
-    })
-    .then(console.log);
+  // prompt
+  //   .formatMessages({
+  //     question,
+  //     historicalMessages: (historicalMessages as Message[]).map((m) =>
+  //       m.role == "user"
+  //         ? new HumanMessage(m.content)
+  //         : new AIMessage(m.content)
+  //     ),
+  //   })
+  //   .then(console.log);
 
   const chain = new LLMChain({
     prompt,
