@@ -11,6 +11,63 @@ import {
   MessagesPlaceholder,
 } from "langchain/prompts";
 import { BufferMemory } from "langchain/memory";
+import {
+  BaseListChatMessageHistory,
+  BaseMessage,
+  type InputValues,
+} from "langchain/schema";
+import type { MemoryVariables, OutputValues } from "langchain/dist/memory/base";
+
+// create a class SupaBufferMemory that extends BufferMemory
+// and overrides `saveContext` and `loadMemoryVariables` to log
+// its arguments to console and then call super
+export class SupaBufferMemory extends BufferMemory {
+  saveContext(
+    inputValues: InputValues,
+    outputValues: OutputValues
+  ): Promise<void> {
+    console.log("saveContext", {
+      inputValues,
+      outputValues,
+      inputKey: this.inputKey,
+      outputKey: this.outputKey,
+    });
+    return super.saveContext(inputValues, outputValues);
+  }
+
+  loadMemoryVariables(values: InputValues): Promise<MemoryVariables> {
+    console.log("loadMemoryVariables", { values });
+    return super.loadMemoryVariables(values);
+  }
+}
+
+export class SupaChatMessageHistory extends BaseListChatMessageHistory {
+  lc_namespace = ["langchain", "stores", "message", "in_memory"];
+
+  private messages: BaseMessage[] = [];
+
+  constructor(messages?: BaseMessage[]) {
+    super(...arguments);
+    this.messages = messages ?? [];
+  }
+
+  async getMessages(): Promise<BaseMessage[]> {
+    console.log("SupaChatMessageHistory: getMessages", {
+      messages: this.messages,
+    });
+    return this.messages;
+  }
+
+  async addMessage(message: BaseMessage) {
+    console.log("SupaChatMessageHistory: addMessage", { message });
+    this.messages.push(message);
+  }
+
+  async clear() {
+    console.log("SupaChatMessageHistory: clear");
+    this.messages = [];
+  }
+}
 
 export const action = async ({ request }: ActionArgs) => {
   // [
@@ -42,7 +99,13 @@ export const action = async ({ request }: ActionArgs) => {
   ]);
 
   const chain = new ConversationChain({
-    memory: new BufferMemory({ returnMessages: true, memoryKey: "history" }),
+    // memory: new BufferMemory({ returnMessages: true, memoryKey: "history" }),
+    memory: new BufferMemory({
+      returnMessages: true,
+      memoryKey: "history",
+      chatHistory: new SupaChatMessageHistory(),
+    }),
+    // memory: new SupaBufferMemory({ returnMessages: true, memoryKey: "history" }),
     prompt,
     llm: chat,
   });
