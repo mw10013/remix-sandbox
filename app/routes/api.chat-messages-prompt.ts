@@ -1,16 +1,15 @@
 import { type ActionArgs } from "@remix-run/node";
-// import type { Message } from "ai";
+import type { Message } from "ai";
 import { StreamingTextResponse, LangChainStream } from "ai";
-// import { AIMessage, HumanMessage } from "langchain/schema";
+import { AIMessage, HumanMessage } from "langchain/schema";
 import { ChatOpenAI } from "langchain/chat_models/openai";
-import { ConversationChain } from "langchain/chains";
+import { LLMChain } from "langchain/chains";
 import {
   ChatPromptTemplate,
   HumanMessagePromptTemplate,
   SystemMessagePromptTemplate,
   MessagesPlaceholder,
 } from "langchain/prompts";
-import { BufferMemory } from "langchain/memory";
 
 export const action = async ({ request }: ActionArgs) => {
   // [
@@ -23,7 +22,7 @@ export const action = async ({ request }: ActionArgs) => {
   const json = await request.json();
   console.log({ json });
   const { messages } = json;
-  //   console.log(messages);
+//   console.log(messages);
   const historicalMessages = messages.slice(0, messages.length - 1);
   const { content: question } = messages[messages.length - 1];
   console.log({ historicalMessages, question });
@@ -41,33 +40,26 @@ export const action = async ({ request }: ActionArgs) => {
       "You are a laconic assistant that responds concisely"
     ),
     // https://js.langchain.com/docs/modules/memory/examples/buffer_memory_chat
-    new MessagesPlaceholder("history"),
+    new MessagesPlaceholder("historicalMessages"),
     HumanMessagePromptTemplate.fromTemplate("{question}"),
   ]);
 
-  const chain = new ConversationChain({
-    memory: new BufferMemory({ returnMessages: true, memoryKey: "history" }),
+  const chain = new LLMChain({
     prompt,
     llm: chat,
   });
-  chain.call({ question }, [handlers]);
-
-  // const chain = new LLMChain({
-  //   prompt,
-  //   llm: chat,
-  // });
-  // chain
-  //   .call(
-  //     {
-  //       question,
-  //       historicalMessages: (historicalMessages as Message[]).map((m) =>
-  //         m.role == "user"
-  //           ? new HumanMessage(m.content)
-  //           : new AIMessage(m.content)
-  //       ),
-  //     },
-  //     [handlers]
-  //   )
-  //   .catch(console.error);
+  chain
+    .call(
+      {
+        question,
+        historicalMessages: (historicalMessages as Message[]).map((m) =>
+          m.role == "user"
+            ? new HumanMessage(m.content)
+            : new AIMessage(m.content)
+        ),
+      },
+      [handlers]
+    )
+    .catch(console.error);
   return new StreamingTextResponse(stream);
 };

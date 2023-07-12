@@ -21,7 +21,7 @@
     "clsx": "^1.2.1",
     "gpt3-tokenizer": "^1.1.5",
     "isbot": "^3.6.12",
-    "langchain": "^0.0.106",
+    "langchain": "^0.0.107",
     "lucide-react": "^0.259.0",
     "nanoid": "^4.0.2",
     "openai-edge": "^1.2.0",
