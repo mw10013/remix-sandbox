@@ -20,13 +20,9 @@ export const action = async ({ request }: ActionArgs) => {
   //   { role: 'assistant', content: 'OK.' },
   //   { role: 'user', content: 'peace' }
   // ]
-  const json = await request.json();
-  console.log({ json });
-  const { messages } = json;
-  //   console.log(messages);
-  const historicalMessages = messages.slice(0, messages.length - 1);
-  const { content: question } = messages[messages.length - 1];
-  console.log({ historicalMessages, question });
+  const { messages } = await request.json();
+  const { content: input } = messages[messages.length - 1];
+  console.log({ input });
 
   const { stream, handlers } = LangChainStream();
   const chat = new ChatOpenAI({
@@ -42,7 +38,7 @@ export const action = async ({ request }: ActionArgs) => {
     ),
     // https://js.langchain.com/docs/modules/memory/examples/buffer_memory_chat
     new MessagesPlaceholder("history"),
-    HumanMessagePromptTemplate.fromTemplate("{question}"),
+    HumanMessagePromptTemplate.fromTemplate("{input}"),
   ]);
 
   const chain = new ConversationChain({
@@ -50,24 +46,7 @@ export const action = async ({ request }: ActionArgs) => {
     prompt,
     llm: chat,
   });
-  chain.call({ question }, [handlers]);
+  chain.call({ input }, [handlers]);
 
-  // const chain = new LLMChain({
-  //   prompt,
-  //   llm: chat,
-  // });
-  // chain
-  //   .call(
-  //     {
-  //       question,
-  //       historicalMessages: (historicalMessages as Message[]).map((m) =>
-  //         m.role == "user"
-  //           ? new HumanMessage(m.content)
-  //           : new AIMessage(m.content)
-  //       ),
-  //     },
-  //     [handlers]
-  //   )
-  //   .catch(console.error);
   return new StreamingTextResponse(stream);
 };
