@@ -66,9 +66,13 @@ export class SupaChatMessageHistory extends BaseListChatMessageHistory {
       .eq("id", id)
       .throwOnError()
       .maybeSingle();
-    const messages: BaseMessage[] = data?.payload
-      ? mapStoredMessagesToChatMessages(data.payload.messages)
-      : [];
+
+    const messages: BaseMessage[] =
+      data?.payload &&
+      typeof data.payload === "object" &&
+      "messages" in data.payload 
+        ? mapStoredMessagesToChatMessages(data.payload.messages as unknown as StoredMessage[])
+        : [];
 
     return new SupaChatMessageHistory(id, messages);
   }
