@@ -1,7 +1,5 @@
 import { type ActionArgs } from "@remix-run/node";
-// import type { Message } from "ai";
 import { StreamingTextResponse, LangChainStream } from "ai";
-// import { AIMessage, HumanMessage } from "langchain/schema";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { ConversationChain } from "langchain/chains";
 import {
@@ -11,37 +9,103 @@ import {
   MessagesPlaceholder,
 } from "langchain/prompts";
 import { BufferMemory } from "langchain/memory";
-import type {
-  BaseMessage} from "langchain/schema";
+import type { BaseMessage, StoredMessage } from "langchain/schema";
+import { supabaseAdmin } from "~/lib/supabase";
 import {
+  AIMessage,
   BaseListChatMessageHistory,
+  HumanMessage,
+  SystemMessage,
 } from "langchain/schema";
+import type { Json } from "types/database";
+
+// Based on langchain/stores/message/utils.ts
+// payload │ {"messages": [{"data": {"content": "yo", "additional_kwargs": {}}, "type": "human"}, {"data": {"content": "Hello! How can I assist you today?", "additional_kwargs": {}}, "type": "ai"}]}
+export function mapStoredMessagesToChatMessages(
+  messages: StoredMessage[]
+): BaseMessage[] {
+  return messages.map((m) => {
+    switch (m.type) {
+      case "human":
+        return new HumanMessage(m.data);
+      case "ai":
+        return new AIMessage(m.data);
+      case "system":
+        return new SystemMessage(m.data);
+      // case "chat": {
+      //   if (m.data.role === undefined) {
+      //     throw new Error("Role must be defined for chat messages");
+      //   }
+      //   return new ChatMessage(storedMessage.data as ChatMessageFieldsWithRole);
+      // }
+      default:
+        throw new Error(
+          `mapStoredMessagesToChatMessages: unexpected type: ${m.type}`
+        );
+    }
+  });
+}
+
+export function mapChatMessagesToStoredMessages(
+  messages: BaseMessage[]
+): StoredMessage[] {
+  return messages.map((message) => message.toDict());
+}
+
+// id      │ 6PMNym1
+// payload │ {"messages": [{"data": {"content": "yo", "additional_kwargs": {}}, "type": "human"}, {"data": {"content": "Hello! How can I assist you today?", "additional_kwargs": {}}, "type": "ai"}]}
 
 export class SupaChatMessageHistory extends BaseListChatMessageHistory {
   lc_namespace = ["langchain", "stores", "message", "in_memory"];
 
+  private id: string;
   private messages: BaseMessage[] = [];
 
-  constructor(messages?: BaseMessage[]) {
-    super(...arguments);
-    this.messages = messages ?? [];
+  constructor(id: string) {
+    super();
+    this.id = id;
+    this.messages = [];
+    this.initialize();
+  }
+
+  async initialize(): Promise<void> {
+    const { data } = await supabaseAdmin
+      .from("chat_message_history")
+      .select("payload")
+      .eq("id", this.id)
+      .throwOnError()
+      .maybeSingle();
+    // console.log({ data: JSON.stringify(data, null, 2) });
+    this.messages = data?.payload
+      ? mapStoredMessagesToChatMessages(data.payload.messages)
+      : [];
+    console.log("SupaChatMessageHistory: initialize: ", { messages: JSON.stringify(this.messages, null, 2) });
   }
 
   async getMessages(): Promise<BaseMessage[]> {
     console.log("SupaChatMessageHistory: getMessages", {
-      messages: this.messages,
+      messages: JSON.stringify(this.messages, null, 2),
     });
     return this.messages;
   }
 
   async addMessage(message: BaseMessage) {
-    console.log("SupaChatMessageHistory: addMessage", { message });
+    // console.log("SupaChatMessageHistory: addMessage", { message });
     this.messages.push(message);
+    const messagesData = mapChatMessagesToStoredMessages(this.messages);
+
+    await supabaseAdmin
+      .from("chat_message_history")
+      .upsert({
+        id: this.id,
+        payload: { messages: messagesData } as unknown as Json,
+      })
+      .throwOnError();
   }
 
   async clear() {
-    console.log("SupaChatMessageHistory: clear");
-    this.messages = [];
+    // this.messages = [];
+    throw new Error("SupaChatMessageHistory: clear: unimplemented");
   }
 }
 
@@ -53,9 +117,9 @@ export const action = async ({ request }: ActionArgs) => {
   //   { role: 'assistant', content: 'OK.' },
   //   { role: 'user', content: 'peace' }
   // ]
-  const { messages } = await request.json();
+  const { id, messages } = await request.json();
   const { content: input } = messages[messages.length - 1];
-  console.log({ input });
+  console.log({ id, input });
 
   const { stream, handlers } = LangChainStream();
   const chat = new ChatOpenAI({
@@ -78,7 +142,7 @@ export const action = async ({ request }: ActionArgs) => {
     memory: new BufferMemory({
       returnMessages: true,
       memoryKey: "history",
-      chatHistory: new SupaChatMessageHistory(),
+      chatHistory: new SupaChatMessageHistory(id),
     }),
     prompt,
     llm: chat,

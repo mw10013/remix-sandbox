@@ -34,6 +34,21 @@ export interface Database {
   }
   public: {
     Tables: {
+      chat_message_history: {
+        Row: {
+          id: string
+          payload: Json
+        }
+        Insert: {
+          id: string
+          payload: Json
+        }
+        Update: {
+          id?: string
+          payload?: Json
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           id: string
