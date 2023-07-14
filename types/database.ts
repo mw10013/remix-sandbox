@@ -49,6 +49,21 @@ export interface Database {
         }
         Relationships: []
       }
+      chat_summary: {
+        Row: {
+          id: string
+          summary: string
+        }
+        Insert: {
+          id: string
+          summary: string
+        }
+        Update: {
+          id?: string
+          summary?: string
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           id: string
