@@ -37,7 +37,7 @@ export default function Index() {
 
 function Chat({ id }: { id: string }) {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
-    api: "/api/chat-memory",
+    api: "/api/chat-summary",
     id,
     body: { id },
   });
