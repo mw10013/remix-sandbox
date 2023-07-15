@@ -45,6 +45,12 @@ Actions: none
 Prescriptions: none
 `,
   },
+  {
+    id: "1",
+    role: "assistant",
+    content:
+      "Hello. This is the St. John's Riverside Hospital virtual nurse. Are you ready for your follow-up call?",
+  },
 ];
 
 function Chat({ id }: { id: string }) {
@@ -53,7 +59,7 @@ function Chat({ id }: { id: string }) {
     id,
     body: { id },
     initialMessages,
-    initialInput: "Hello, I'm ready for my follow-up call",
+    initialInput: "Hello, I'm ready.",
   });
   return (
     <div className="mx-auto w-full max-w-md py-24 flex flex-col stretch">
@@ -64,7 +70,9 @@ function Chat({ id }: { id: string }) {
             : m.role === "assistant"
             ? "AI: "
             : "System: "}
-          {m.content}
+          {m.content.split("\n").map((line, i) => (
+            <div key={i}>{line}</div>
+          ))}
         </div>
       ))}
       <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
