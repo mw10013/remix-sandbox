@@ -1,8 +1,9 @@
 import { type ActionArgs } from "@remix-run/node";
 import { AIMessage, HumanMessage, SystemMessage } from "langchain/schema";
 import type { Message } from "ai";
-import { StreamingTextResponse, LangChainStream } from "ai";
+import { LangChainStream } from "ai";
 import { ChatOpenAI } from "langchain/chat_models/openai";
+import { StreamingTextResponse } from "~/lib/ai-hacks";
 
 export const action = async ({ request }: ActionArgs) => {
   const { messages } = await request.json();
