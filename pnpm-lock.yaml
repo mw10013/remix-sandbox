@@ -26,8 +26,8 @@ dependencies:
     specifier: ^2.26.0
     version: 2.26.0
   ai:
-    specifier: ^2.1.18
-    version: 2.1.18(react@18.2.0)(svelte@4.0.5)(vue@3.3.4)
+    specifier: ^2.1.20
+    version: 2.1.20(react@18.2.0)(svelte@4.0.5)(vue@3.3.4)
   class-variance-authority:
     specifier: ^0.6.1
     version: 0.6.1
@@ -41,8 +41,8 @@ dependencies:
     specifier: ^3.6.12
     version: 3.6.12
   langchain:
-    specifier: ^0.0.107
-    version: 0.0.107(@supabase/supabase-js@2.26.0)
+    specifier: ^0.0.110
+    version: 0.0.110(@supabase/supabase-js@2.26.0)
   lucide-react:
     specifier: ^0.259.0
     version: 0.259.0(react@18.2.0)
@@ -2804,7 +2804,7 @@ packages:
       '@vue/shared': 3.3.4
       estree-walker: 2.0.2
       magic-string: 0.30.1
-      postcss: 8.4.25
+      postcss: 8.4.26
       source-map-js: 1.0.2
     dev: false
 
@@ -2940,8 +2940,8 @@ packages:
     resolution: {integrity: sha512-hCOfMzbFx5IDutmWLAt6MZwOUjIfSM9G9FyVxytmE4Rs/5YDPWQrD/+IR1w+FweD9H2oOZEnv36TmkjhNURBVA==}
     dev: true
 
-  /ai@2.1.18(react@18.2.0)(svelte@4.0.5)(vue@3.3.4):
-    resolution: {integrity: sha512-mHrhaXhUVeYw0y1d9XyEYIc+3gXgl9MifcjXPAF2rwg9bdXUWnTxhuNval7dGTc9Ws7Du1c7Ul4tiBM+D2QGtQ==}
+  /ai@2.1.20(react@18.2.0)(svelte@4.0.5)(vue@3.3.4):
+    resolution: {integrity: sha512-MZeq+kT9eUT+3H8QMffKuEZ/+wf4EYuANr5j69gHRg2Gre8UemXj48fAdZfzuzwwdshVOmwoaeT9pMwKl9h+vA==}
     engines: {node: '>=14.6'}
     peerDependencies:
       react: ^18.2.0
@@ -5891,8 +5891,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /langchain@0.0.107(@supabase/supabase-js@2.26.0):
-    resolution: {integrity: sha512-Axrjk6y02ZdBa3UeNM515hXxNg6G0foIc9V6YcCxM3dNNGZNiH14pdz1pT0lkOR5vgZt0cbEhi//7QcsuS9zGA==}
+  /langchain@0.0.110(@supabase/supabase-js@2.26.0):
+    resolution: {integrity: sha512-GM7j5jwLTg17206NJR8vI8VbPd9KOqR3XjX41S9rm814gAS2LsFR43CK3cQFVfM5DlEA+o5qOx9CUvWwFvxRMw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@aws-sdk/client-dynamodb': ^3.310.0
@@ -5905,6 +5905,7 @@ packages:
       '@getmetal/metal-sdk': '*'
       '@getzep/zep-js': ^0.4.1
       '@gomomento/sdk': ^1.23.0
+      '@google-ai/generativelanguage': ^0.2.1
       '@google-cloud/storage': ^6.10.1
       '@huggingface/inference': ^1.5.1
       '@notionhq/client': ^2.2.5
@@ -5927,10 +5928,11 @@ packages:
       d3-dsv: ^2.0.0
       epub2: ^3.0.1
       faiss-node: ^0.2.1
-      google-auth-library: ^8.8.0
+      google-auth-library: ^8.9.0
       hnswlib-node: ^1.4.2
       html-to-text: ^9.0.5
       ignore: ^5.2.0
+      ioredis: ^5.3.2
       mammoth: '*'
       mongodb: ^5.2.0
       mysql2: ^3.3.3
@@ -5969,6 +5971,8 @@ packages:
       '@getzep/zep-js':
         optional: true
       '@gomomento/sdk':
+        optional: true
+      '@google-ai/generativelanguage':
         optional: true
       '@google-cloud/storage':
         optional: true
@@ -6022,6 +6026,8 @@ packages:
         optional: true
       ignore:
         optional: true
+      ioredis:
+        optional: true
       mammoth:
         optional: true
       mongodb:
@@ -6070,7 +6076,7 @@ packages:
       js-tiktoken: 1.0.7
       js-yaml: 4.1.0
       jsonpointer: 5.0.1
-      langchainplus-sdk: 0.0.19
+      langsmith: 0.0.5
       ml-distance: 4.0.1
       object-hash: 3.0.0
       openai: 3.3.0
@@ -6087,8 +6093,8 @@ packages:
       - supports-color
     dev: false
 
-  /langchainplus-sdk@0.0.19:
-    resolution: {integrity: sha512-WKMN90E8M/JWO9lajbw8sv32xVHUZM+fN9I4LUveffBoX4qoJFi6uzYeDH0loW2SjnOSh3Tnzlz+Qp6ZenCu6g==}
+  /langsmith@0.0.5:
+    resolution: {integrity: sha512-9XIm5jTwDbbmGR325VuOYwcTugna4fMM7eprKXRSm7LeCKSr4yy1YnIazcBInuvytAfGoULjxnJJpsnvFWyUkw==}
     hasBin: true
     dependencies:
       '@types/uuid': 9.0.2
@@ -7530,6 +7536,15 @@ packages:
       nanoid: 3.3.6
       picocolors: 1.0.0
       source-map-js: 1.0.2
+
+  /postcss@8.4.26:
+    resolution: {integrity: sha512-jrXHFF8iTloAenySjM/ob3gSj7pCu0Ji49hnjqzsgSRa50hkWCKD0HQ+gMNJkW38jBI68MpAAg7ZWwHwX8NMMw==}
+    engines: {node: ^10 || ^12 || >=14}
+    dependencies:
+      nanoid: 3.3.6
+      picocolors: 1.0.0
+      source-map-js: 1.0.2
+    dev: false
 
   /prelude-ls@1.1.2:
     resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
