@@ -16,6 +16,7 @@ export const action = async ({ request }: ActionArgs) => {
     temperature: 0,
     maxRetries: 1,
     streaming: true,
+    verbose: true,
   });
   chat
     .call(
