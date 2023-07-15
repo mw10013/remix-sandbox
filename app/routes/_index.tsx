@@ -41,8 +41,7 @@ Symptoms: none
 Pain: none
 Regimen: none
 Actions: none
-Prescriptions: none
-`,
+Prescriptions: none`,
   },
   {
     id: "1",
