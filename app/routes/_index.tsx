@@ -21,8 +21,7 @@ const initialMessages: Message[] = [
   {
     id: "0",
     role: "system",
-    content: `
-You are a friendly virtual nurse following up with a patient. Analyze the Patient Profile using the Rules. Ask the patient only one question in a response that helps you update the  Patient Profile to satisfy the Rules. In your responses include the Updated Patient Profile in full along with your next question, which should be generated from the Updated Patient Profile and the Rules.
+    content: `You are a friendly virtual nurse following up with a patient. Analyze the Patient Profile using the Rules. Ask the patient only one question in a response that helps you update the  Patient Profile to satisfy the Rules. In your responses include the Updated Patient Profile in full along with your next question, which should be generated from the Updated Patient Profile and the Rules.
 
 Rules
 - if recent visit, find out current status
@@ -70,9 +69,11 @@ function Chat({ id }: { id: string }) {
             : m.role === "assistant"
             ? "AI: "
             : "System: "}
-          {m.content.split("\n").map((line, i) => (
-            <div key={i}>{line}</div>
-          ))}
+          {m.content
+            .split("\n")
+            .map((line, i) =>
+              i === 0 ? <span key={i}>{line}</span> : <div key={i}>{line === "" ? "---" : line}</div>
+            )}
         </div>
       ))}
       <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
