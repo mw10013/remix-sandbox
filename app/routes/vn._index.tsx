@@ -4,6 +4,8 @@ import { useChat } from "ai/react";
 import { Input } from "~/components/ui/input";
 import { nanoid } from "~/lib/utils";
 import type { Message } from "ai";
+import { Label } from "~/components/ui/label";
+import { Textarea } from "~/components/ui/textarea";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -69,15 +71,18 @@ function Chat({ id }: { id: string }) {
               : m.role === "assistant"
               ? "AI: "
               : "System: "}
-            {m.content
-              .split("\n")
-              .map((line, i) =>
-                i === 0 ? (
-                  <span key={i}>{line}</span>
-                ) : (
-                  <div key={i}>{line === "" ? "---" : line}</div>
-                )
-              )}
+            {m.content.split("\n").map((line, i) =>
+              i === 0 ? (
+                <span key={i}>{line}</span>
+              ) : line === "" ? (
+                <>
+                  <br key={i} />
+                  <br key={`${i}a`} />
+                </>
+              ) : (
+                <div key={i}>{line}</div>
+              )
+            )}
           </div>
         ))}
         <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
@@ -85,7 +90,15 @@ function Chat({ id }: { id: string }) {
           <Button type="submit">Send</Button>
         </form>
       </div>
-      <div className="">Patient Profile</div>
+      <div className="grid w-full gap-3 self-start">
+        <Label htmlFor="system">System</Label>
+        <Textarea id="system" rows={20} />
+        <Label htmlFor="patient-profile">Patient Profile</Label>
+        <Textarea id="patient-profile" />
+        <Button variant="secondary" onClick={() => alert("click")}>
+          Run
+        </Button>
+      </div>
     </div>
   );
 }
