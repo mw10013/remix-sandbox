@@ -19,14 +19,22 @@ export default function Index() {
   const [systemMessageContent, setSystemMessageContent] = React.useState(
     systemMessageContentDefault
   );
+  const [patientProfileMessageContent, setPatientProfileMessageContent] =
+    React.useState(patientProfileMessageContentDefault);
   // const initialMessages = React.useMemo(() => composeInitialMessages(systemMessageContent), [systemMessageContent]);
-  const initialMessages = composeInitialMessages(systemMessageContent);
+  const initialMessages = composeInitialMessages(
+    systemMessageContent,
+    patientProfileMessageContent
+  );
   const id = nanoid();
   return (
     <Chat
       id={id}
       initialMessages={initialMessages}
+      systemMessageContent={systemMessageContent}
       setSystemMessageContent={setSystemMessageContent}
+      patientProfileMessageContent={patientProfileMessageContent}
+      setPatientProfileMessageContent={setPatientProfileMessageContent}
     />
   );
 }
@@ -43,22 +51,27 @@ Rules
 - if problem with prescriptions, share status and confirm location
 - if patient wants to change the pharmacy for a prescription, confirm before updating
 - any questions
-- if there is confusion or you don't know how to proceed, offer to connect to on-call provider
+- if there is confusion or you don't know how to proceed, offer to connect to on-call provider`;
 
-Patient Profile
-Visit: ER visit yesterday.
+const patientProfileMessageContentDefault = `Visit: ER visit yesterday.
 Symptoms: none
 Pain: none
 Regimen: none
 Actions: none
 Prescriptions: none`;
 
-function composeInitialMessages(systemMessageContent: string): Message[] {
+function composeInitialMessages(
+  systemMessageContent: string,
+  patientProfileMessageContent: string
+): Message[] {
   return [
     {
       id: "0",
       role: "system",
-      content: systemMessageContent,
+      content: `${systemMessageContent}
+
+Patient Profile
+${patientProfileMessageContent}`,
     },
     {
       id: "1",
@@ -72,11 +85,17 @@ function composeInitialMessages(systemMessageContent: string): Message[] {
 function Chat({
   id,
   initialMessages,
+  systemMessageContent,
   setSystemMessageContent,
+  patientProfileMessageContent,
+  setPatientProfileMessageContent,
 }: {
   id: string;
   initialMessages: Message[];
+  systemMessageContent: string;
   setSystemMessageContent: React.Dispatch<React.SetStateAction<string>>;
+  patientProfileMessageContent: string;
+  setPatientProfileMessageContent: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: "/api/vn-messages",
@@ -86,6 +105,7 @@ function Chat({
     initialInput: "Hello, I'm ready.",
   });
   const systemTextAreaRef = React.useRef<HTMLTextAreaElement>(null);
+  const patientProfileTextAreaRef = React.useRef<HTMLTextAreaElement>(null);
   return (
     <div className="grid grid-cols-3 gap-6 min-h-full items-stretch p-6">
       <div className="col-span-2">
@@ -120,16 +140,24 @@ function Chat({
         <Textarea
           id="systemTextArea"
           ref={systemTextAreaRef}
-          rows={20}
-          defaultValue={initialMessages[0].content}
+          rows={15}
+          defaultValue={systemMessageContent}
         />
         <Label htmlFor="patient-profile">Patient Profile</Label>
-        <Textarea id="patient-profile" />
+        <Textarea
+          id="patient-profile"
+          ref={patientProfileTextAreaRef}
+          rows={10}
+          defaultValue={patientProfileMessageContent}
+        />
         <Button
           variant="secondary"
           onClick={() => {
             // alert(systemTextAreaRef.current?.value);
             setSystemMessageContent(systemTextAreaRef.current?.value ?? "");
+            setPatientProfileMessageContent(
+              patientProfileTextAreaRef.current?.value ?? ""
+            );
           }}
         >
           Run
