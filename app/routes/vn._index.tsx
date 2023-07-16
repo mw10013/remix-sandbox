@@ -60,25 +60,32 @@ function Chat({ id }: { id: string }) {
     initialInput: "Hello, I'm ready.",
   });
   return (
-    <div className="mx-auto w-full max-w-md py-24 flex flex-col stretch">
-      {messages.map((m) => (
-        <div key={m.id}>
-          {m.role === "user"
-            ? "User: "
-            : m.role === "assistant"
-            ? "AI: "
-            : "System: "}
-          {m.content
-            .split("\n")
-            .map((line, i) =>
-              i === 0 ? <span key={i}>{line}</span> : <div key={i}>{line === "" ? "---" : line}</div>
-            )}
-        </div>
-      ))}
-      <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
-        <Input value={input} onChange={handleInputChange} />
-        <Button type="submit">Send</Button>
-      </form>
+    <div className="grid grid-cols-3 gap-6 min-h-full items-stretch p-6">
+      <div className="col-span-2">
+        {messages.map((m) => (
+          <div key={m.id}>
+            {m.role === "user"
+              ? "User: "
+              : m.role === "assistant"
+              ? "AI: "
+              : "System: "}
+            {m.content
+              .split("\n")
+              .map((line, i) =>
+                i === 0 ? (
+                  <span key={i}>{line}</span>
+                ) : (
+                  <div key={i}>{line === "" ? "---" : line}</div>
+                )
+              )}
+          </div>
+        ))}
+        <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
+          <Input value={input} onChange={handleInputChange} />
+          <Button type="submit">Send</Button>
+        </form>
+      </div>
+      <div className="">Patient Profile</div>
     </div>
   );
 }
