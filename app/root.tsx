@@ -24,7 +24,6 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      {/* <body className="min-h-screen bg-background font-sans antialiased"> */}
       <body className="h-full bg-background font-sans antialiased">
         <Outlet />
         <ScrollRestoration />

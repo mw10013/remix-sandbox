@@ -4,8 +4,15 @@ import { useChat } from "ai/react";
 import { Input } from "~/components/ui/input";
 import { nanoid } from "~/lib/utils";
 import type { Message } from "ai";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import React from "react";
 
 export const meta: V2_MetaFunction = () => {
@@ -60,6 +67,20 @@ Regimen: none
 Actions: none
 Prescriptions: none`;
 
+const patientProfileMessageContentProfile1 = `Visit: ER visit yesterday`;
+
+const patientProfileMessageContentProfile2 = `Symptoms: knee pain
+Regimen: apply prescribed antibiotic ointment
+Actions: make appointment with orthopedist (contact: Mr. Ortho, 111-222-3333)`;
+
+const patientProfileMessageContentProfile3 = `Actions: Follow up with Dr Nelson (contact: 111-222-3333) re: blood pressure
+Prescriptions: Antibiotic (Status: electronically sent this morning. Pharmacy: CVS at 2290 central park ave)
+Pharmacy: CVS at 2290 central park ave.`;
+
+const patientProfileMessageContentProfile4 = `Symptoms: recurrent episodes of lightheadedness (Status: severe. When: yesterday)
+Actions: find primary care doctor or cardiologist to follow-up with
+ER visit yesterday`;
+
 function composeInitialMessages(
   systemMessageContent: string,
   patientProfileMessageContent: string
@@ -84,6 +105,54 @@ ${patientProfileMessageContent}
       content: `Hello. This is the St. John's Riverside Hospital virtual nurse. Are you ready for your follow-up call?`,
     },
   ];
+}
+
+function PatientProfileActions({
+  patientProfileTextAreaRef,
+}: {
+  patientProfileTextAreaRef: React.RefObject<HTMLTextAreaElement>;
+}) {
+  const handler = (profile: string) => () => {
+    if (patientProfileTextAreaRef.current) {
+      patientProfileTextAreaRef.current.value = profile;
+      patientProfileTextAreaRef.current.focus();
+    }
+  };
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+        >
+          <DotsHorizontalIcon className="h-4 w-4" />
+          <span className="sr-only">Open menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-[160px]">
+        <DropdownMenuItem
+          onClick={handler(patientProfileMessageContentProfile1)}
+        >
+          Profile 1
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={handler(patientProfileMessageContentProfile2)}
+        >
+          Profile 2
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={handler(patientProfileMessageContentProfile3)}
+        >
+          Profile 3
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={handler(patientProfileMessageContentProfile4)}
+        >
+          Profile 4
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
 
 function Chat({
@@ -147,7 +216,12 @@ function Chat({
           rows={15}
           defaultValue={systemMessageContent}
         />
-        <Label htmlFor="patient-profile">Patient Profile</Label>
+        <div className="flex justify-between items-baseline">
+          <Label htmlFor="patient-profile">Patient Profile</Label>
+          <PatientProfileActions
+            patientProfileTextAreaRef={patientProfileTextAreaRef}
+          />
+        </div>
         <Textarea
           id="patient-profile"
           ref={patientProfileTextAreaRef}
