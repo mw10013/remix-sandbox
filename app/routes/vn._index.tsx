@@ -16,15 +16,22 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export default function Index() {
+  const [systemMessageContent, setSystemMessageContent] = React.useState(
+    systemMessageContentDefault
+  );
+  // const initialMessages = React.useMemo(() => composeInitialMessages(systemMessageContent), [systemMessageContent]);
+  const initialMessages = composeInitialMessages(systemMessageContent);
   const id = nanoid();
-  return <Chat id={id} />;
+  return (
+    <Chat
+      id={id}
+      initialMessages={initialMessages}
+      setSystemMessageContent={setSystemMessageContent}
+    />
+  );
 }
 
-const initialMessages: Message[] = [
-  {
-    id: "0",
-    role: "system",
-    content: `You are a friendly virtual nurse following up with a patient. Analyze the Patient Profile using the Rules. Ask the patient only one question in a response that helps you update the  Patient Profile to satisfy the Rules. In your responses include the Updated Patient Profile in full along with your next question, which should be generated from the Updated Patient Profile and the Rules.
+const systemMessageContentDefault = `You are a friendly virtual nurse following up with a patient. Analyze the Patient Profile using the Rules. Ask the patient only one question in a response that helps you update the  Patient Profile to satisfy the Rules. In your responses include the Updated Patient Profile in full along with your next question, which should be generated from the Updated Patient Profile and the Rules.
 
 Rules
 - if recent visit, find out current status
@@ -44,17 +51,33 @@ Symptoms: none
 Pain: none
 Regimen: none
 Actions: none
-Prescriptions: none`,
-  },
-  {
-    id: "1",
-    role: "assistant",
-    content:
-      "Hello. This is the St. John's Riverside Hospital virtual nurse. Are you ready for your follow-up call?",
-  },
-];
+Prescriptions: none`;
 
-function Chat({ id }: { id: string }) {
+function composeInitialMessages(systemMessageContent: string): Message[] {
+  return [
+    {
+      id: "0",
+      role: "system",
+      content: systemMessageContent,
+    },
+    {
+      id: "1",
+      role: "assistant",
+      content:
+        "Hello. This is the St. John's Riverside Hospital virtual nurse. Are you ready for your follow-up call?",
+    },
+  ];
+}
+
+function Chat({
+  id,
+  initialMessages,
+  setSystemMessageContent,
+}: {
+  id: string;
+  initialMessages: Message[];
+  setSystemMessageContent: React.Dispatch<React.SetStateAction<string>>;
+}) {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: "/api/vn-messages",
     id,
@@ -62,6 +85,7 @@ function Chat({ id }: { id: string }) {
     initialMessages,
     initialInput: "Hello, I'm ready.",
   });
+  const systemTextAreaRef = React.useRef<HTMLTextAreaElement>(null);
   return (
     <div className="grid grid-cols-3 gap-6 min-h-full items-stretch p-6">
       <div className="col-span-2">
@@ -92,11 +116,22 @@ function Chat({ id }: { id: string }) {
         </form>
       </div>
       <div className="grid w-full gap-3 self-start">
-        <Label htmlFor="system">System</Label>
-        <Textarea id="system" rows={20} />
+        <Label htmlFor="systemTextArea">System</Label>
+        <Textarea
+          id="systemTextArea"
+          ref={systemTextAreaRef}
+          rows={20}
+          defaultValue={initialMessages[0].content}
+        />
         <Label htmlFor="patient-profile">Patient Profile</Label>
         <Textarea id="patient-profile" />
-        <Button variant="secondary" onClick={() => alert("click")}>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            // alert(systemTextAreaRef.current?.value);
+            setSystemMessageContent(systemTextAreaRef.current?.value ?? "");
+          }}
+        >
           Run
         </Button>
       </div>
