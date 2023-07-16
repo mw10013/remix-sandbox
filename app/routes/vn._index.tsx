@@ -46,7 +46,7 @@ export default function Index() {
   );
 }
 
-const systemMessageContentDefault = `You are a friendly virtual nurse following up with a patient. Analyze the Patient Profile using the Rules. Ask the patient only one question in a response that helps you update the  Patient Profile to satisfy the Rules. In your responses include the Updated Patient Profile in full along with your next question, which should be generated from the Updated Patient Profile and the Rules.
+const systemMessageContentBasic = `You are a friendly virtual nurse following up with a patient. Analyze the Patient Profile using the Rules. Ask the patient only one question in a response that helps you update the  Patient Profile to satisfy the Rules. In your responses include the Updated Patient Profile in full along with your next question, which should be generated from the Updated Patient Profile and the Rules.
 
 Rules
 - if recent visit, find out current status
@@ -60,14 +60,28 @@ Rules
 - any questions
 - if there is confusion or you don't know how to proceed, offer to connect to on-call provider`;
 
-const patientProfileMessageContentDefault = `Visit: ER visit yesterday.
+const systemMessageContentSimple = `You are a friendly virtual nurse following up with a patient. Analyze the Patient Profile using the Rules. Ask the patient a question that helps you update the  Patient Profile to satisfy the Rules. In your responses include the Updated Patient Profile in full along with your next question, which should be generated from the Updated Patient Profile and the Rules.
+
+Rules
+- if recent visit, find out current status
+- if pain symptoms, find current rating from 0-10
+- if symptoms, find any new symptoms
+- if regimen, find compliance
+- if actions, find completion
+- for actions re: making appointments, offer to show contact info if available, but not for finding
+- if problem with prescriptions, share status and confirm location
+- if patient wants to change the pharmacy for a prescription, confirm before updating
+- any questions
+- if there is confusion or don't know how to proceed, offer to connect to on-call provider`;
+
+const systemMessageContentDefault = systemMessageContentBasic;
+
+const patientProfileMessageContentProfile1 = `Visit: ER visit yesterday.
 Symptoms: none
 Pain: none
 Regimen: none
 Actions: none
 Prescriptions: none`;
-
-const patientProfileMessageContentProfile1 = `Visit: ER visit yesterday`;
 
 const patientProfileMessageContentProfile2 = `Symptoms: knee pain
 Regimen: apply prescribed antibiotic ointment
@@ -80,6 +94,11 @@ Pharmacy: CVS at 2290 central park ave.`;
 const patientProfileMessageContentProfile4 = `Symptoms: recurrent episodes of lightheadedness (Status: severe. When: yesterday)
 Actions: find primary care doctor or cardiologist to follow-up with
 ER visit yesterday`;
+
+const patientProfileMessageContentSimpleProfile1 = `Visit: ER visit yesterday`;
+
+const patientProfileMessageContentDefault =
+  patientProfileMessageContentProfile1;
 
 function composeInitialMessages(
   systemMessageContent: string,
@@ -105,6 +124,40 @@ ${patientProfileMessageContent}
       content: `Hello. This is the St. John's Riverside Hospital virtual nurse. Are you ready for your follow-up call?`,
     },
   ];
+}
+
+function SystemTextAreaActions({
+  systemTextAreaRef,
+}: {
+  systemTextAreaRef: React.RefObject<HTMLTextAreaElement>;
+}) {
+  const handler = (system: string) => () => {
+    if (systemTextAreaRef.current) {
+      systemTextAreaRef.current.value = system;
+      systemTextAreaRef.current.focus();
+    }
+  };
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+        >
+          <DotsHorizontalIcon className="h-4 w-4" />
+          <span className="sr-only">Open menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-[160px]">
+        <DropdownMenuItem onClick={handler(systemMessageContentBasic)}>
+          Basic
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handler(systemMessageContentSimple)}>
+          Simple
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
 
 function PatientProfileActions({
@@ -149,6 +202,11 @@ function PatientProfileActions({
           onClick={handler(patientProfileMessageContentProfile4)}
         >
           Profile 4
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={handler(patientProfileMessageContentSimpleProfile1)}
+        >
+          Simple Profile 1
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -209,7 +267,10 @@ function Chat({
         </form>
       </div>
       <div className="grid w-full gap-3 self-start">
-        <Label htmlFor="systemTextArea">System</Label>
+        <div className="flex justify-between items-baseline">
+          <Label htmlFor="systemTextArea">System</Label>
+          <SystemTextAreaActions systemTextAreaRef={systemTextAreaRef} />
+        </div>
         <Textarea
           id="systemTextArea"
           ref={systemTextAreaRef}
@@ -231,7 +292,6 @@ function Chat({
         <Button
           variant="secondary"
           onClick={() => {
-            // alert(systemTextAreaRef.current?.value);
             setSystemMessageContent(systemTextAreaRef.current?.value ?? "");
             setPatientProfileMessageContent(
               patientProfileTextAreaRef.current?.value ?? ""
