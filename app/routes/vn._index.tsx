@@ -71,7 +71,8 @@ function composeInitialMessages(
       content: `${systemMessageContent}
 
 Patient Profile
-${patientProfileMessageContent}`,
+${patientProfileMessageContent}
+`,
     },
     {
       id: "1",
@@ -118,12 +119,12 @@ function Chat({
               : "System: "}
             {m.content.split("\n").map((line, i) =>
               i === 0 ? (
-                <span key={i}>{line}</span>
-              ) : line === "" ? (
                 <React.Fragment key={i}>
-                  <br />
+                  <span>{line}</span>
                   <br />
                 </React.Fragment>
+              ) : line === "" ? (
+                <br key={i} />
               ) : (
                 <div key={i}>{line}</div>
               )
