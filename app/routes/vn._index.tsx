@@ -6,6 +6,7 @@ import { nanoid } from "~/lib/utils";
 import type { Message } from "ai";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
+import React from "react";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -75,10 +76,10 @@ function Chat({ id }: { id: string }) {
               i === 0 ? (
                 <span key={i}>{line}</span>
               ) : line === "" ? (
-                <>
-                  <br key={i} />
-                  <br key={`${i}a`} />
-                </>
+                <React.Fragment key={i}>
+                  <br />
+                  <br />
+                </React.Fragment>
               ) : (
                 <div key={i}>{line}</div>
               )
