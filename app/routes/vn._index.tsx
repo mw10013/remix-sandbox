@@ -77,8 +77,11 @@ ${patientProfileMessageContent}
     {
       id: "1",
       role: "assistant",
-      content:
-        "Hello. This is the St. John's Riverside Hospital virtual nurse. Are you ready for your follow-up call?",
+      //       content: `Updated Patient Profile
+      // ${patientProfileMessageContent}
+
+      // Hello. This is the St. John's Riverside Hospital virtual nurse. Are you ready for your follow-up call?`,
+      content: `Hello. This is the St. John's Riverside Hospital virtual nurse. Are you ready for your follow-up call?`,
     },
   ];
 }
