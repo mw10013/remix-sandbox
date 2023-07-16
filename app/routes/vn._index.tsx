@@ -160,7 +160,7 @@ function SystemTextAreaActions({
   );
 }
 
-function PatientProfileActions({
+function PatientProfileTextAreaActions({
   patientProfileTextAreaRef,
 }: {
   patientProfileTextAreaRef: React.RefObject<HTMLTextAreaElement>;
@@ -266,7 +266,7 @@ function Chat({
           <Button type="submit">Send</Button>
         </form>
       </div>
-      <div className="grid w-full gap-3 self-start">
+      <div className="grid w-full gap-1 self-start">
         <div className="flex justify-between items-baseline">
           <Label htmlFor="systemTextArea">System</Label>
           <SystemTextAreaActions systemTextAreaRef={systemTextAreaRef} />
@@ -278,13 +278,13 @@ function Chat({
           defaultValue={systemMessageContent}
         />
         <div className="flex justify-between items-baseline">
-          <Label htmlFor="patient-profile">Patient Profile</Label>
-          <PatientProfileActions
+          <Label htmlFor="patientProfileTextArea">Patient Profile</Label>
+          <PatientProfileTextAreaActions
             patientProfileTextAreaRef={patientProfileTextAreaRef}
           />
         </div>
         <Textarea
-          id="patient-profile"
+          id="patientProfileTextArea"
           ref={patientProfileTextAreaRef}
           rows={10}
           defaultValue={patientProfileMessageContent}
