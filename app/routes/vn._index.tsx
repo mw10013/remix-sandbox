@@ -23,30 +23,33 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export default function Index() {
-  const [systemMessageContent, setSystemMessageContent] = React.useState(
-    systemMessageContentDefault
+  const [systemContent, setSystemContent] = React.useState(
+    systemContents[0].content
   );
-  const [patientProfileMessageContent, setPatientProfileMessageContent] =
-    React.useState(patientProfileMessageContentDefault);
-  // const initialMessages = React.useMemo(() => composeInitialMessages(systemMessageContent), [systemMessageContent]);
+  const [patientProfileContent, setPatientProfileContent] = React.useState(
+    patientProfileContents[0].content
+  );
   const initialMessages = composeInitialMessages(
-    systemMessageContent,
-    patientProfileMessageContent
+    systemContent,
+    patientProfileContent
   );
   const id = nanoid();
   return (
     <Chat
       id={id}
       initialMessages={initialMessages}
-      systemMessageContent={systemMessageContent}
-      setSystemMessageContent={setSystemMessageContent}
-      patientProfileMessageContent={patientProfileMessageContent}
-      setPatientProfileMessageContent={setPatientProfileMessageContent}
+      systemContent={systemContent}
+      setSystemContent={setSystemContent}
+      patientProfileContent={patientProfileContent}
+      setPatientProfileContent={setPatientProfileContent}
     />
   );
 }
 
-const systemMessageContentBasic = `You are a friendly virtual nurse following up with a patient. Analyze the Patient Profile using the Rules. Ask the patient only one question in a response that helps you update the  Patient Profile to satisfy the Rules. In your responses include the Updated Patient Profile in full along with your next question, which should be generated from the Updated Patient Profile and the Rules.
+const systemContents = [
+  {
+    label: "Basic",
+    content: `You are a friendly virtual nurse following up with a patient. Analyze the Patient Profile using the Rules. Ask the patient only one question in a response that helps you update the  Patient Profile to satisfy the Rules. In your responses include the Updated Patient Profile in full along with your next question, which should be generated from the Updated Patient Profile and the Rules.
 
 Rules
 - if recent visit, find out current status
@@ -58,9 +61,11 @@ Rules
 - if problem with prescriptions, share status and confirm location
 - if patient wants to change the pharmacy for a prescription, confirm before updating
 - any questions
-- if there is confusion or you don't know how to proceed, offer to connect to on-call provider`;
-
-const systemMessageContentSimple = `You are a friendly virtual nurse following up with a patient. Analyze the Patient Profile using the Rules. Ask the patient a question that helps you update the  Patient Profile to satisfy the Rules. In your responses include the Updated Patient Profile in full along with your next question, which should be generated from the Updated Patient Profile and the Rules.
+- if there is confusion or you don't know how to proceed, offer to connect to on-call provider`,
+  },
+  {
+    label: "Simple",
+    content: `You are a friendly virtual nurse following up with a patient. Analyze the Patient Profile using the Rules. Ask the patient a question that helps you update the  Patient Profile to satisfy the Rules. In your responses include the Updated Patient Profile in full along with your next question, which should be generated from the Updated Patient Profile and the Rules.
 
 Rules
 - if recent visit, find out current status
@@ -72,69 +77,77 @@ Rules
 - if problem with prescriptions, share status and confirm location
 - if patient wants to change the pharmacy for a prescription, confirm before updating
 - any questions
-- if there is confusion or don't know how to proceed, offer to connect to on-call provider`;
+- if there is confusion or don't know how to proceed, offer to connect to on-call provider`,
+  },
+];
 
-const systemMessageContentDefault = systemMessageContentBasic;
-
-const patientProfileMessageContentProfile1 = `Visit: ER visit yesterday.
+const patientProfileContents = [
+  {
+    label: "Profile 1",
+    content: `Visit: ER visit yesterday.
 Symptoms: none
 Pain: none
 Regimen: none
 Actions: none
-Prescriptions: none`;
-
-const patientProfileMessageContentProfile2 = `Symptoms: knee pain
+Prescriptions: none`,
+  },
+  {
+    label: "Profile 2",
+    content: `Symptoms: knee pain
 Regimen: apply prescribed antibiotic ointment
-Actions: make appointment with orthopedist (contact: Mr. Ortho, 111-222-3333)`;
-
-const patientProfileMessageContentProfile3 = `Actions: Follow up with Dr Nelson (contact: 111-222-3333) re: blood pressure
-Prescriptions: Antibiotic (Status: electronically sent this morning. Pharmacy: CVS at 2290 central park ave)
-Pharmacy: CVS at 2290 central park ave.`;
-
-const patientProfileMessageContentProfile4 = `Symptoms: recurrent episodes of lightheadedness (Status: severe. When: yesterday)
+Actions: make appointment with orthopedist (contact: Mr. Ortho, 111-222-3333)`,
+  },
+  {
+    label: "Profile 3",
+    content: `Actions: Follow up with Dr Nelson (contact: 111-222-3333) re: blood pressure
+Prescriptions: Antibiotic (Status: electronically sent this morning.
+Pharmacy: CVS at 2290 central park ave.`,
+  },
+  {
+    label: "Profile 4",
+    content: `Symptoms: recurrent episodes of lightheadedness (Status: severe. When: yesterday)
 Actions: find primary care doctor or cardiologist to follow-up with
-ER visit yesterday`;
-
-const patientProfileMessageContentSimpleProfile1 = `Visit: ER visit yesterday`;
-
-const patientProfileMessageContentDefault =
-  patientProfileMessageContentProfile1;
+ER visit yesterday`,
+  },
+  {
+    label: "Simple Profile 1",
+    content: `Visit: ER visit yesterday`,
+  },
+];
 
 function composeInitialMessages(
-  systemMessageContent: string,
-  patientProfileMessageContent: string
+  systemContent: string,
+  patientProfileContent: string
 ): Message[] {
   return [
     {
       id: "0",
       role: "system",
-      content: `${systemMessageContent}
+      content: `${systemContent}
 
 Patient Profile
-${patientProfileMessageContent}
+${patientProfileContent}
 `,
     },
     {
       id: "1",
       role: "assistant",
-      //       content: `Updated Patient Profile
-      // ${patientProfileMessageContent}
-
-      // Hello. This is the St. John's Riverside Hospital virtual nurse. Are you ready for your follow-up call?`,
       content: `Hello. This is the St. John's Riverside Hospital virtual nurse. Are you ready for your follow-up call?`,
     },
   ];
 }
 
-function SystemTextAreaActions({
-  systemTextAreaRef,
+function ContentsDropDown({
+  textAreaRef,
+  contents,
 }: {
-  systemTextAreaRef: React.RefObject<HTMLTextAreaElement>;
+  textAreaRef: React.RefObject<HTMLTextAreaElement>;
+  contents: { label: string; content: string }[];
 }) {
-  const handler = (system: string) => () => {
-    if (systemTextAreaRef.current) {
-      systemTextAreaRef.current.value = system;
-      systemTextAreaRef.current.focus();
+  const handler = (content: string) => () => {
+    if (textAreaRef.current) {
+      textAreaRef.current.value = content;
+      textAreaRef.current.focus();
     }
   };
   return (
@@ -149,65 +162,11 @@ function SystemTextAreaActions({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={handler(systemMessageContentBasic)}>
-          Basic
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handler(systemMessageContentSimple)}>
-          Simple
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-function PatientProfileTextAreaActions({
-  patientProfileTextAreaRef,
-}: {
-  patientProfileTextAreaRef: React.RefObject<HTMLTextAreaElement>;
-}) {
-  const handler = (profile: string) => () => {
-    if (patientProfileTextAreaRef.current) {
-      patientProfileTextAreaRef.current.value = profile;
-      patientProfileTextAreaRef.current.focus();
-    }
-  };
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-        >
-          <DotsHorizontalIcon className="h-4 w-4" />
-          <span className="sr-only">Open menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem
-          onClick={handler(patientProfileMessageContentProfile1)}
-        >
-          Profile 1
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={handler(patientProfileMessageContentProfile2)}
-        >
-          Profile 2
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={handler(patientProfileMessageContentProfile3)}
-        >
-          Profile 3
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={handler(patientProfileMessageContentProfile4)}
-        >
-          Profile 4
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={handler(patientProfileMessageContentSimpleProfile1)}
-        >
-          Simple Profile 1
-        </DropdownMenuItem>
+        {contents.map((c) => (
+          <DropdownMenuItem key={c.label} onClick={handler(c.content)}>
+            {c.label}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -216,17 +175,17 @@ function PatientProfileTextAreaActions({
 function Chat({
   id,
   initialMessages,
-  systemMessageContent,
-  setSystemMessageContent,
-  patientProfileMessageContent,
-  setPatientProfileMessageContent,
+  systemContent,
+  setSystemContent,
+  patientProfileContent,
+  setPatientProfileContent,
 }: {
   id: string;
   initialMessages: Message[];
-  systemMessageContent: string;
-  setSystemMessageContent: React.Dispatch<React.SetStateAction<string>>;
-  patientProfileMessageContent: string;
-  setPatientProfileMessageContent: React.Dispatch<React.SetStateAction<string>>;
+  systemContent: string;
+  setSystemContent: React.Dispatch<React.SetStateAction<string>>;
+  patientProfileContent: string;
+  setPatientProfileContent: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: "/api/vn-messages",
@@ -269,31 +228,35 @@ function Chat({
       <div className="grid w-full gap-1 self-start">
         <div className="flex justify-between items-baseline">
           <Label htmlFor="systemTextArea">System</Label>
-          <SystemTextAreaActions systemTextAreaRef={systemTextAreaRef} />
+          <ContentsDropDown
+            textAreaRef={systemTextAreaRef}
+            contents={systemContents}
+          />
         </div>
         <Textarea
           id="systemTextArea"
           ref={systemTextAreaRef}
           rows={15}
-          defaultValue={systemMessageContent}
+          defaultValue={systemContent}
         />
         <div className="flex justify-between items-baseline">
           <Label htmlFor="patientProfileTextArea">Patient Profile</Label>
-          <PatientProfileTextAreaActions
-            patientProfileTextAreaRef={patientProfileTextAreaRef}
+          <ContentsDropDown
+            textAreaRef={patientProfileTextAreaRef}
+            contents={patientProfileContents}
           />
         </div>
         <Textarea
           id="patientProfileTextArea"
           ref={patientProfileTextAreaRef}
           rows={10}
-          defaultValue={patientProfileMessageContent}
+          defaultValue={patientProfileContent}
         />
         <Button
           variant="secondary"
           onClick={() => {
-            setSystemMessageContent(systemTextAreaRef.current?.value ?? "");
-            setPatientProfileMessageContent(
+            setSystemContent(systemTextAreaRef.current?.value ?? "");
+            setPatientProfileContent(
               patientProfileTextAreaRef.current?.value ?? ""
             );
           }}
