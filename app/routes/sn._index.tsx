@@ -4,6 +4,7 @@ import { useChat } from "ai/react";
 import { Input } from "~/components/ui/input";
 import { nanoid } from "~/lib/utils";
 import type { Message } from "ai";
+import { PanelRightOpen } from "lucide-react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
@@ -29,12 +30,17 @@ export default function Index() {
   const initialMessages = composeInitialMessages(systemContent);
   const id = nanoid();
   return (
-    <Chat
-      id={id}
-      initialMessages={initialMessages}
-      systemContent={systemContent}
-      setSystemContent={setSystemContent}
-    />
+    <div className="relative w-full h-full">
+      <Chat
+        id={id}
+        initialMessages={initialMessages}
+        systemContent={systemContent}
+        setSystemContent={setSystemContent}
+      />
+      <Button variant="outline" size="icon" className="absolute top-2 right-2">
+        <PanelRightOpen className="h-4 w-4" />
+      </Button>
+    </div>
   );
 }
 
