@@ -34,17 +34,21 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export default function Index() {
+  const [id, setId] = React.useState(nanoid())
   const [systemContent, setSystemContent] = React.useState(
     systemContents[0].content
   );
+  const newChat = (systemContent: string) => {
+    setId(nanoid())
+    setSystemContent(systemContent)
+  }
   const initialMessages = composeInitialMessages(systemContent);
-  const id = nanoid();
   return (
     <div className="relative w-full h-full">
       <Chat id={id} initialMessages={initialMessages} />
       <SideSheet
         systemContent={systemContent}
-        setSystemContent={setSystemContent}
+        newChat={newChat}
       />
     </div>
   );
@@ -185,10 +189,10 @@ function ContentsDropDown({
 
 function SideSheet({
   systemContent,
-  setSystemContent,
+  newChat,
 }: {
   systemContent: string;
-  setSystemContent: React.Dispatch<React.SetStateAction<string>>;
+  newChat: (systemContent: string) => void;
 }) {
   const systemTextAreaRef = React.useRef<HTMLTextAreaElement>(null);
 
@@ -203,7 +207,7 @@ function SideSheet({
           <PanelRightOpen className="h-4 w-4" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[640px] sm:max-w-md">
+      <SheetContent className="w-[400px] sm:w-[640px] sm:max-w-xl">
         <SheetHeader>
           <SheetTitle>Configure Scenario</SheetTitle>
           <SheetDescription></SheetDescription>
@@ -228,7 +232,7 @@ function SideSheet({
             <Button
               variant="secondary"
               onClick={() => {
-                setSystemContent(systemTextAreaRef.current?.value ?? "");
+                newChat(systemTextAreaRef.current?.value ?? "");
               }}
             >
               Run
