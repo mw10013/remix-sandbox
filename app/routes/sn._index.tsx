@@ -212,7 +212,7 @@ function SideSheet({
           <SheetTitle>Configure Scenario</SheetTitle>
           <SheetDescription></SheetDescription>
         </SheetHeader>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           <div className="flex justify-between items-baseline">
             <Label htmlFor="systemTextArea">System</Label>
             <ContentsDropDown
@@ -223,11 +223,11 @@ function SideSheet({
           <Textarea
             id="systemTextArea"
             ref={systemTextAreaRef}
-            rows={25}
+            rows={30}
             defaultValue={systemContent}
           />
         </div>
-        <SheetFooter>
+        <SheetFooter className="mt-2">
           <SheetClose asChild>
             <Button
               variant="secondary"
