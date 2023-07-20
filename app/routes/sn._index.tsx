@@ -9,6 +9,16 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -31,15 +41,11 @@ export default function Index() {
   const id = nanoid();
   return (
     <div className="relative w-full h-full">
-      <Chat
-        id={id}
-        initialMessages={initialMessages}
+      <Chat id={id} initialMessages={initialMessages} />
+      <SideSheet
         systemContent={systemContent}
         setSystemContent={setSystemContent}
       />
-      <Button variant="outline" size="icon" className="absolute top-2 right-2">
-        <PanelRightOpen className="h-4 w-4" />
-      </Button>
     </div>
   );
 }
@@ -54,7 +60,7 @@ NOTES are delimited by ###NOTES###. Maintain and update the NOTES internally dur
 NOTES
 
 ###NOTES###
-ER visit yesterday
+- ER visit yesterday
 ###NOTES###
 
 RULES are delimited by ###RULES###. 
@@ -68,6 +74,51 @@ Action: Greet, ask how they are feeling, and update NOTES
 [Rule: Visit]
 Condition: No follow-up on visit in NOTES
 Action: Ask if any questions after visit and update NOTES
+
+[Rule: Confusion]
+Condition: The patient seems confused in the conversation context
+Action: Offer to escalate to on-site provider
+
+###RULES###
+
+Steps for each turn of the conversation
+
+- Update NOTES internally based on conversation context and RULES
+- Ask one question that helps you satisfy the RULES applied to NOTES and the conversation context.`,
+  },
+  {
+    label: "Scenario 2",
+    content: `You are a friendly chat bot following up with a patient. 
+
+NOTES are delimited by ###NOTES###. Maintain and update the NOTES internally during the conversation. Be ready to show NOTES when asked.
+
+NOTES
+
+###NOTES###
+- knee pain
+- treatment plan to apply antibiotic ointment
+- pending action to make appointment with orthopedist
+###NOTES###
+
+RULES are delimited by ###RULES###. 
+
+###RULES###
+
+[Rule: Greet]
+Condition: No greeting noted in NOTES
+Action: Greet, ask how they are feeling, and update NOTES
+
+[Rule: Pain]
+Condition: No pain follow-up in NOTES
+Action: Ask for pain rating and update NOTES
+
+[Rule: New]
+Condition: No follow-up on new symptoms or conditions in NOTES
+Action: Ask about any new symptoms or conditions and update NOTES
+
+[Rule: Action]
+Condition: NOTES contains pending action with no follow-up on whether complete
+Action: Ask for status and update NOTES
 
 [Rule: Confusion]
 Condition: The patient seems confused in the conversation context
@@ -132,16 +183,69 @@ function ContentsDropDown({
   );
 }
 
-function Chat({
-  id,
-  initialMessages,
+function SideSheet({
   systemContent,
   setSystemContent,
 }: {
-  id: string;
-  initialMessages: Message[];
   systemContent: string;
   setSystemContent: React.Dispatch<React.SetStateAction<string>>;
+}) {
+  const systemTextAreaRef = React.useRef<HTMLTextAreaElement>(null);
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute top-2 right-2"
+        >
+          <PanelRightOpen className="h-4 w-4" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="w-[400px] sm:w-[640px] sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle>Configure Scenario</SheetTitle>
+          <SheetDescription></SheetDescription>
+        </SheetHeader>
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between items-baseline">
+            <Label htmlFor="systemTextArea">System</Label>
+            <ContentsDropDown
+              textAreaRef={systemTextAreaRef}
+              contents={systemContents}
+            />
+          </div>
+          <Textarea
+            id="systemTextArea"
+            ref={systemTextAreaRef}
+            rows={25}
+            defaultValue={systemContent}
+          />
+        </div>
+        <SheetFooter>
+          <SheetClose asChild>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setSystemContent(systemTextAreaRef.current?.value ?? "");
+              }}
+            >
+              Run
+            </Button>
+          </SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+function Chat({
+  id,
+  initialMessages,
+}: {
+  id: string;
+  initialMessages: Message[];
 }) {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: "/api/sn-messages",
@@ -150,7 +254,6 @@ function Chat({
     initialMessages,
     initialInput: "Hello, I'm ready.",
   });
-  // const systemTextAreaRef = React.useRef<HTMLTextAreaElement>(null);
   return (
     <div className="w-full max-w-4xl mx-auto min-h-full p-6">
       <div className="col-span-2">
@@ -180,29 +283,6 @@ function Chat({
           <Button type="submit">Send</Button>
         </form>
       </div>
-      {/* <div className="grid w-full gap-1 self-start">
-        <div className="flex justify-between items-baseline">
-          <Label htmlFor="systemTextArea">System</Label>
-          <ContentsDropDown
-            textAreaRef={systemTextAreaRef}
-            contents={systemContents}
-          />
-        </div>
-        <Textarea
-          id="systemTextArea"
-          ref={systemTextAreaRef}
-          rows={15}
-          defaultValue={systemContent}
-        />
-        <Button
-          variant="secondary"
-          onClick={() => {
-            setSystemContent(systemTextAreaRef.current?.value ?? "");
-          }}
-        >
-          Run
-        </Button>
-      </div> */}
     </div>
   );
 }
