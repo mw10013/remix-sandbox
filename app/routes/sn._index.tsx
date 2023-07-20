@@ -144,9 +144,9 @@ function Chat({
     initialMessages,
     initialInput: "Hello, I'm ready.",
   });
-  const systemTextAreaRef = React.useRef<HTMLTextAreaElement>(null);
+  // const systemTextAreaRef = React.useRef<HTMLTextAreaElement>(null);
   return (
-    <div className="grid grid-cols-3 gap-6 min-h-full items-stretch p-6">
+    <div className="w-full max-w-4xl mx-auto min-h-full p-6">
       <div className="col-span-2">
         {messages.map((m) => (
           <div key={m.id}>
@@ -174,7 +174,7 @@ function Chat({
           <Button type="submit">Send</Button>
         </form>
       </div>
-      <div className="grid w-full gap-1 self-start">
+      {/* <div className="grid w-full gap-1 self-start">
         <div className="flex justify-between items-baseline">
           <Label htmlFor="systemTextArea">System</Label>
           <ContentsDropDown
@@ -196,7 +196,7 @@ function Chat({
         >
           Run
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }
