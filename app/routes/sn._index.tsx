@@ -26,9 +26,6 @@ export default function Index() {
   const [systemContent, setSystemContent] = React.useState(
     systemContents[0].content
   );
-  const [patientProfileContent, setPatientProfileContent] = React.useState(
-    patientProfileContents[0].content
-  );
   const initialMessages = composeInitialMessages(systemContent);
   const id = nanoid();
   return (
@@ -37,8 +34,6 @@ export default function Index() {
       initialMessages={initialMessages}
       systemContent={systemContent}
       setSystemContent={setSystemContent}
-      patientProfileContent={patientProfileContent}
-      setPatientProfileContent={setPatientProfileContent}
     />
   );
 }
@@ -78,40 +73,6 @@ Steps for each turn of the conversation
 
 - Update NOTES internally based on conversation context and RULES
 - Ask one question that helps you satisfy the RULES applied to NOTES and the conversation context.`,
-  },
-];
-
-const patientProfileContents = [
-  {
-    label: "Profile 1",
-    content: `Visit: ER visit yesterday.
-Symptoms: none
-Pain: none
-Treatment Plan: none
-Actions: none
-Prescriptions: none`,
-  },
-  {
-    label: "Profile 2",
-    content: `Symptoms: knee pain
-Treatment Plan: apply prescribed antibiotic ointment
-Actions: make appointment with orthopedist (contact: Mr. Ortho, 111-222-3333)`,
-  },
-  {
-    label: "Profile 3",
-    content: `Actions: Follow up with Dr Nelson (contact: 111-222-3333) re: blood pressure
-Prescriptions: Antibiotic (Status: electronically sent this morning.
-Pharmacy: CVS at 2290 central park ave.`,
-  },
-  {
-    label: "Profile 4",
-    content: `Symptoms: recurrent episodes of lightheadedness (Status: severe. When: yesterday)
-Actions: find primary care doctor or cardiologist to follow-up with
-ER visit yesterday`,
-  },
-  {
-    label: "Simple Profile 1",
-    content: `ER visit yesterday`,
   },
 ];
 
@@ -170,15 +131,11 @@ function Chat({
   initialMessages,
   systemContent,
   setSystemContent,
-  patientProfileContent,
-  setPatientProfileContent,
 }: {
   id: string;
   initialMessages: Message[];
   systemContent: string;
   setSystemContent: React.Dispatch<React.SetStateAction<string>>;
-  patientProfileContent: string;
-  setPatientProfileContent: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: "/api/sn-messages",
@@ -188,7 +145,6 @@ function Chat({
     initialInput: "Hello, I'm ready.",
   });
   const systemTextAreaRef = React.useRef<HTMLTextAreaElement>(null);
-  const patientProfileTextAreaRef = React.useRef<HTMLTextAreaElement>(null);
   return (
     <div className="grid grid-cols-3 gap-6 min-h-full items-stretch p-6">
       <div className="col-span-2">
@@ -232,26 +188,10 @@ function Chat({
           rows={15}
           defaultValue={systemContent}
         />
-        <div className="flex justify-between items-baseline">
-          <Label htmlFor="patientProfileTextArea">Patient Profile</Label>
-          <ContentsDropDown
-            textAreaRef={patientProfileTextAreaRef}
-            contents={patientProfileContents}
-          />
-        </div>
-        <Textarea
-          id="patientProfileTextArea"
-          ref={patientProfileTextAreaRef}
-          rows={10}
-          defaultValue={patientProfileContent}
-        />
         <Button
           variant="secondary"
           onClick={() => {
             setSystemContent(systemTextAreaRef.current?.value ?? "");
-            setPatientProfileContent(
-              patientProfileTextAreaRef.current?.value ?? ""
-            );
           }}
         >
           Run
