@@ -1,5 +1,7 @@
+import React from "react";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { Button } from "~/components/ui/button";
+import type { UseChatHelpers } from "ai/react";
 import { useChat } from "ai/react";
 import { Input } from "~/components/ui/input";
 import { nanoid } from "~/lib/utils";
@@ -24,7 +26,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import React from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
+import { useToast } from "~/components/ui/use-toast";
+import { IconArrowElbow } from "~/components/icons";
+import { useEnterSubmit } from "~/lib/hooks/use-enter-submit";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -34,22 +43,19 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export default function Index() {
-  const [id, setId] = React.useState(nanoid())
+  const [id, setId] = React.useState(nanoid());
   const [systemContent, setSystemContent] = React.useState(
     systemContents[0].content
   );
   const newChat = (systemContent: string) => {
-    setId(nanoid())
-    setSystemContent(systemContent)
-  }
+    setId(nanoid());
+    setSystemContent(systemContent);
+  };
   const initialMessages = composeInitialMessages(systemContent);
   return (
     <div className="relative w-full h-full">
       <Chat id={id} initialMessages={initialMessages} />
-      <SideSheet
-        systemContent={systemContent}
-        newChat={newChat}
-      />
+      <SideSheet systemContent={systemContent} newChat={newChat} />
     </div>
   );
 }
@@ -244,6 +250,86 @@ function SideSheet({
   );
 }
 
+export interface PromptProps
+  extends Pick<UseChatHelpers, "input" | "setInput"> {
+  onSubmit: (value: string) => Promise<void>;
+  isLoading: boolean;
+}
+
+export function PromptForm({
+  onSubmit,
+  input,
+  setInput,
+  isLoading,
+}: PromptProps) {
+  const { formRef, onKeyDown } = useEnterSubmit();
+  const inputRef = React.useRef<HTMLTextAreaElement>(null);
+
+  React.useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  return (
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+        if (!input?.trim()) {
+          return;
+        }
+        setInput("");
+        await onSubmit(input);
+      }}
+      ref={formRef}
+    >
+      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
+        {/* <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href="/"
+              className={cn(
+                buttonVariants({ size: 'sm', variant: 'outline' }),
+                'absolute left-0 top-4 h-8 w-8 rounded-full bg-background p-0 sm:left-4'
+              )}
+            >
+              <IconPlus />
+              <span className="sr-only">New Chat</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent>New Chat</TooltipContent>
+        </Tooltip> */}
+        <Textarea
+          ref={inputRef}
+          tabIndex={0}
+          onKeyDown={onKeyDown}
+          rows={1}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Send a message."
+          spellCheck={false}
+          className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
+        />
+        <div className="absolute right-0 top-4 sm:right-4">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="submit"
+                size="icon"
+                disabled={isLoading || input === ""}
+              >
+                <IconArrowElbow />
+                <span className="sr-only">Send message</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Send message</TooltipContent>
+          </Tooltip>
+        </div>
+      </div>
+    </form>
+  );
+}
+
 function Chat({
   id,
   initialMessages,
@@ -251,12 +337,22 @@ function Chat({
   id: string;
   initialMessages: Message[];
 }) {
+  const { toast } = useToast();
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: "/api/sn-messages",
     id,
     body: { id },
     initialMessages,
     initialInput: "Hello, I'm ready.",
+    onResponse(response) {
+      if (response.status === 401) {
+        toast({
+          variant: "destructive",
+          title: "Unauthorized",
+          description: response.statusText,
+        });
+      }
+    },
   });
   return (
     <div className="w-full max-w-4xl mx-auto min-h-full p-6">

@@ -8,6 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { Toaster } from "~/components/ui/toaster"
 import styles from "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -17,7 +18,7 @@ export const links: LinksFunction = () => [
 
 export default function App() {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" suppressHydrationWarning className="h-full">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -26,6 +27,7 @@ export default function App() {
       </head>
       <body className="h-full bg-background font-sans antialiased">
         <Outlet />
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
