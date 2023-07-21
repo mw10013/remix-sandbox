@@ -338,7 +338,8 @@ function Chat({
   initialMessages: Message[];
 }) {
   const { toast } = useToast();
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
+  const { messages, append, reload, stop, isLoading, input, setInput, handleInputChange, handleSubmit } =
+    useChat({
     api: "/api/sn-messages",
     id,
     body: { id },
