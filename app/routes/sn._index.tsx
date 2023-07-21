@@ -1,15 +1,14 @@
 import React from "react";
 import type { V2_MetaFunction } from "@remix-run/node";
-import { Button } from "~/components/ui/button";
+import Textarea from "react-textarea-autosize";
+import { Button, buttonVariants } from "~/components/ui/button";
 import type { UseChatHelpers } from "ai/react";
 import { useChat } from "ai/react";
-import { Input } from "~/components/ui/input";
-import { nanoid } from "~/lib/utils";
+import { cn, nanoid } from "~/lib/utils";
 import type { Message } from "ai";
 import { PanelRightOpen } from "lucide-react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
 import {
   Sheet,
   SheetClose,
@@ -32,8 +31,9 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { useToast } from "~/components/ui/use-toast";
-import { IconArrowElbow } from "~/components/icons";
+import { IconArrowElbow, IconPlus } from "~/components/icons";
 import { useEnterSubmit } from "~/lib/hooks/use-enter-submit";
+import { Link } from "@remix-run/react";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -253,15 +253,15 @@ function SideSheet({
 export interface ChatPanelProps
   extends Pick<
     UseChatHelpers,
-    | 'append'
-    | 'isLoading'
-    | 'reload'
-    | 'messages'
-    | 'stop'
-    | 'input'
-    | 'setInput'
+    | "append"
+    | "isLoading"
+    | "reload"
+    | "messages"
+    | "stop"
+    | "input"
+    | "setInput"
   > {
-  id?: string
+  id?: string;
 }
 
 export function ChatPanel({
@@ -272,7 +272,7 @@ export function ChatPanel({
   reload,
   input,
   setInput,
-  messages
+  messages,
 }: ChatPanelProps) {
   return (
     <div className="fixed inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
@@ -303,12 +303,12 @@ export function ChatPanel({
         </div> */}
         <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
           <PromptForm
-            onSubmit={async value => {
+            onSubmit={async (value) => {
               await append({
                 id,
                 content: value,
-                role: 'user'
-              })
+                role: "user",
+              });
             }}
             input={input}
             setInput={setInput}
@@ -317,7 +317,7 @@ export function ChatPanel({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export interface PromptProps
@@ -354,13 +354,13 @@ export function PromptForm({
       ref={formRef}
     >
       <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
-        {/* <Tooltip>
+        <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="/"
+              to="/"
               className={cn(
-                buttonVariants({ size: 'sm', variant: 'outline' }),
-                'absolute left-0 top-4 h-8 w-8 rounded-full bg-background p-0 sm:left-4'
+                buttonVariants({ size: "sm", variant: "outline" }),
+                "absolute left-0 top-4 h-8 w-8 rounded-full bg-background p-0 sm:left-4"
               )}
             >
               <IconPlus />
@@ -368,7 +368,7 @@ export function PromptForm({
             </Link>
           </TooltipTrigger>
           <TooltipContent>New Chat</TooltipContent>
-        </Tooltip> */}
+        </Tooltip>
         <Textarea
           ref={inputRef}
           tabIndex={0}
@@ -416,8 +416,8 @@ function Chat({
     isLoading,
     input,
     setInput,
-    handleInputChange,
-    handleSubmit,
+    // handleInputChange,
+    // handleSubmit,
   } = useChat({
     api: "/api/sn-messages",
     id,
