@@ -1,4 +1,7 @@
 import React from "react";
+import remarkGfm from "remark-gfm";
+import type { Options } from "react-markdown";
+import ReactMarkdown from "react-markdown";
 import type { V2_MetaFunction } from "@remix-run/node";
 import TextareaAutosize from "react-textarea-autosize";
 import type { ButtonProps } from "~/components/ui/button";
@@ -31,8 +34,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { Separator } from "~/components/ui/separator";
 import { useToast } from "~/components/ui/use-toast";
-import { IconArrowDown, IconArrowElbow } from "~/components/icons";
+import {
+  IconArrowDown,
+  IconArrowElbow,
+  IconOpenAI,
+  IconUser,
+} from "~/components/icons";
 import { useInView } from "react-intersection-observer";
 import { useEnterSubmit } from "~/lib/hooks/use-enter-submit";
 import { useAtBottom } from "~/lib/hooks/use-at-bottom";
@@ -208,11 +217,7 @@ function SideSheet({
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="fixed top-2 right-2"
-        >
+        <Button variant="outline" size="icon" className="fixed top-2 right-2">
           <PanelRightOpen className="h-4 w-4" />
         </Button>
       </SheetTrigger>
@@ -250,6 +255,105 @@ function SideSheet({
         </SheetFooter>
       </SheetContent>
     </Sheet>
+  );
+}
+
+export const MemoizedReactMarkdown: React.FC<Options> = React.memo(
+  ReactMarkdown,
+  (prevProps, nextProps) =>
+    prevProps.children === nextProps.children &&
+    prevProps.className === nextProps.className
+);
+
+export interface ChatMessageProps {
+  message: Message;
+}
+
+export function ChatMessage({ message, ...props }: ChatMessageProps) {
+  return (
+    <div
+      className={cn("group relative mb-4 flex items-start md:-ml-12")}
+      {...props}
+    >
+      <div
+        className={cn(
+          "flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow",
+          message.role === "user"
+            ? "bg-background"
+            : "bg-primary text-primary-foreground"
+        )}
+      >
+        {message.role === "user" ? <IconUser /> : <IconOpenAI />}
+      </div>
+      <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
+        <MemoizedReactMarkdown
+          className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
+          // remarkPlugins={[remarkGfm, remarkMath]}
+          remarkPlugins={[remarkGfm]}
+          components={{
+            p({ children }) {
+              return <p className="mb-2 last:mb-0">{children}</p>;
+            },
+            // code({ node, inline, className, children, ...props }) {
+            //   if (children.length) {
+            //     if (children[0] == '▍') {
+            //       return (
+            //         <span className="mt-1 animate-pulse cursor-default">▍</span>
+            //       )
+            //     }
+
+            //     children[0] = (children[0] as string).replace('`▍`', '▍')
+            //   }
+
+            //   const match = /language-(\w+)/.exec(className || '')
+
+            //   if (inline) {
+            //     return (
+            //       <code className={className} {...props}>
+            //         {children}
+            //       </code>
+            //     )
+            //   }
+
+            //   return (
+            //     <CodeBlock
+            //       key={Math.random()}
+            //       language={(match && match[1]) || ''}
+            //       value={String(children).replace(/\n$/, '')}
+            //       {...props}
+            //     />
+            //   )
+            // }
+          }}
+        >
+          {message.content}
+        </MemoizedReactMarkdown>
+        {/* <ChatMessageActions message={message} /> */}
+      </div>
+    </div>
+  );
+}
+
+export interface ChatList {
+  messages: Message[];
+}
+
+export function ChatList({ messages }: ChatList) {
+  if (!messages.length) {
+    return null;
+  }
+
+  return (
+    <div className="relative mx-auto max-w-2xl px-4">
+      {messages.map((message, index) => (
+        <div key={index}>
+          <ChatMessage message={message} />
+          {index < messages.length - 1 && (
+            <Separator className="my-4 md:my-8" />
+          )}
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -455,10 +559,11 @@ export function PromptForm({
 function Chat({
   id,
   initialMessages,
+  className,
 }: {
   id: string;
   initialMessages: Message[];
-}) {
+} & React.ComponentProps<"div">) {
   const { toast } = useToast();
   const {
     messages,
@@ -488,7 +593,12 @@ function Chat({
   });
   return (
     <div className="w-full max-w-4xl mx-auto min-h-full p-6">
-      <div className="col-span-2">
+      <div className={cn("pb-[200px] pt-4 md:pt-10", className)}>
+        <ChatList messages={messages} />
+        <ChatScrollAnchor trackVisibility={isLoading} />
+      </div>
+
+      {/* <div className="col-span-2">
         {messages.map((m) => (
           <div key={m.id}>
             {m.role === "user"
@@ -509,22 +619,17 @@ function Chat({
               )
             )}
           </div>
-        ))}
-        {/* <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
-          <Input value={input} onChange={handleInputChange} />
-          <Button type="submit">Send</Button>
-        </form> */}
-        <ChatPanel
-          id={id}
-          isLoading={isLoading}
-          stop={stop}
-          append={append}
-          reload={reload}
-          messages={messages}
-          input={input}
-          setInput={setInput}
-        />
-      </div>
+        ))} */}
+      <ChatPanel
+        id={id}
+        isLoading={isLoading}
+        stop={stop}
+        append={append}
+        reload={reload}
+        messages={messages}
+        input={input}
+        setInput={setInput}
+      />
     </div>
   );
 }
