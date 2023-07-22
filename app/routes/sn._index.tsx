@@ -1,7 +1,8 @@
 import React from "react";
 import type { V2_MetaFunction } from "@remix-run/node";
-import Textarea from "react-textarea-autosize";
-import { Button, buttonVariants } from "~/components/ui/button";
+import TextareaAutosize from "react-textarea-autosize";
+import type { ButtonProps } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 import type { UseChatHelpers } from "ai/react";
 import { useChat } from "ai/react";
 import { cn, nanoid } from "~/lib/utils";
@@ -31,9 +32,11 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { useToast } from "~/components/ui/use-toast";
-import { IconArrowElbow, IconPlus } from "~/components/icons";
+import { IconArrowDown, IconArrowElbow } from "~/components/icons";
+import { useInView } from "react-intersection-observer";
 import { useEnterSubmit } from "~/lib/hooks/use-enter-submit";
-import { Link } from "@remix-run/react";
+import { useAtBottom } from "~/lib/hooks/use-at-bottom";
+import { Textarea } from "~/components/ui/textarea";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -208,7 +211,7 @@ function SideSheet({
         <Button
           variant="outline"
           size="icon"
-          className="absolute top-2 right-2"
+          className="fixed top-2 right-2"
         >
           <PanelRightOpen className="h-4 w-4" />
         </Button>
@@ -250,6 +253,55 @@ function SideSheet({
   );
 }
 
+interface ChatScrollAnchorProps {
+  trackVisibility?: boolean;
+}
+
+export function ChatScrollAnchor({ trackVisibility }: ChatScrollAnchorProps) {
+  const isAtBottom = useAtBottom();
+  const { ref, entry, inView } = useInView({
+    trackVisibility,
+    delay: 100,
+    rootMargin: "0px 0px -150px 0px",
+  });
+
+  React.useEffect(() => {
+    if (isAtBottom && trackVisibility && !inView) {
+      entry?.target.scrollIntoView({
+        block: "start",
+      });
+    }
+  }, [inView, entry, isAtBottom, trackVisibility]);
+
+  return <div ref={ref} className="h-px w-full" />;
+}
+
+export function ButtonScrollToBottom({ className, ...props }: ButtonProps) {
+  const isAtBottom = useAtBottom();
+
+  return (
+    <Button
+      variant="outline"
+      size="icon"
+      className={cn(
+        "absolute right-4 top-1 z-10 bg-background transition-opacity duration-300 sm:right-8 md:top-2",
+        isAtBottom ? "opacity-0" : "opacity-100",
+        className
+      )}
+      onClick={() =>
+        window.scrollTo({
+          top: document.body.offsetHeight,
+          behavior: "smooth",
+        })
+      }
+      {...props}
+    >
+      <IconArrowDown />
+      <span className="sr-only">Scroll to bottom</span>
+    </Button>
+  );
+}
+
 export interface ChatPanelProps
   extends Pick<
     UseChatHelpers,
@@ -276,7 +328,7 @@ export function ChatPanel({
 }: ChatPanelProps) {
   return (
     <div className="fixed inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
-      {/* <ButtonScrollToBottom /> */}
+      <ButtonScrollToBottom />
       <div className="mx-auto sm:max-w-2xl sm:px-4">
         {/* <div className="flex h-10 items-center justify-center">
           {isLoading ? (
@@ -354,7 +406,7 @@ export function PromptForm({
       ref={formRef}
     >
       <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
-        <Tooltip>
+        {/* <Tooltip>
           <TooltipTrigger asChild>
             <Link
               to="/"
@@ -368,8 +420,8 @@ export function PromptForm({
             </Link>
           </TooltipTrigger>
           <TooltipContent>New Chat</TooltipContent>
-        </Tooltip>
-        <Textarea
+        </Tooltip> */}
+        <TextareaAutosize
           ref={inputRef}
           tabIndex={0}
           onKeyDown={onKeyDown}
