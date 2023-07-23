@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import type { V2_MetaFunction } from "@remix-run/node";
 import TextareaAutosize from "react-textarea-autosize";
 import type { ButtonProps } from "~/components/ui/button";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import type { UseChatHelpers } from "ai/react";
 import { useChat } from "ai/react";
 import { cn, nanoid } from "~/lib/utils";
@@ -40,10 +40,12 @@ import {
   IconArrowDown,
   IconArrowElbow,
   IconOpenAI,
+  IconPlus,
   IconUser,
 } from "~/components/icons";
 import { useInView } from "react-intersection-observer";
 import { Textarea } from "~/components/ui/textarea";
+import { Link } from "@remix-run/react";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -72,84 +74,81 @@ export default function Index() {
 
 const systemContents = [
   {
-    label: "Scenario 1",
-    content: `You are a friendly chat bot following up with a patient. 
+    label:"Appointment",
+    content: `
+You are a friendly AI support agent following up with a patient. Use the provided STATE MACHINE, delimited by ###STATE MACHINE###, to guide the conversation and internally maintain and update the provided NOTES, delimited by ###NOTES###, during the conversation. Be ready to show NOTES when asked.
 
-NOTES are delimited by ###NOTES###. Maintain and update the NOTES internally during the conversation. Be ready to show NOTES when asked.
+###STATE MACHINE###
+STATE MACHINE
+
+- initial state: GREET
+- state: GREET
+  - action: say hello and ask patient if ready to begin call
+  - transition: SYMPTOM
+    - condition: patient is ready
+  - transition: BYE
+    - condition: patient is not ready
+- state: SYMPTOM
+  - action: ask for rating on knee pain from 0-10
+  - transition: REFERRAL
+    - condition: patient response with rating
+    - action: update NOTES with knee pain rating
+  - transition: ESCALATE
+    - condition: patient is confused
+- state: REFERRAL
+  - action: tell the patient that the primary doctor recommends follow-up with the referral doctor.
+  - transition: APPOINTMENT_OPTIONS
+- state: APPOINTMENT_OPTIONS
+  - action: show the appointment options and ask if any will work
+  - transition: APPOINTMENT_SCHEDULED
+    - condition: patient selects an option that matches
+    - action: update NOTES with the selection as scheduled appointment.
+  - transition: OTHER_APPOINTMENT_OPTIONS
+    - condition: patient does not select an option
+- state: OTHER_APPOINTMENT_OPTIONS
+  - action: show the other appointment options and ask if any will work
+  - transition: APPOINTMENT_SCHEDULED
+    - condition: patient selects an option that matches
+    - action: update NOTES with the selection as scheduled appointment.
+  - transition: ESCALATE
+    - condition: patient does not select an option or is confused
+- state: PREFERRED_APPOINTMENT_OPTION
+  - action: ask for a preferred appointment date and time so you can check with the referral doctor and callback later.
+  - transition: BYE
+    - condition: patient responds with preference
+    - action: update NOTES with preference as preferred appointment.
+  - transition: BYE
+    - condition: patient has no preference
+    - action: say you will follow-up on this at a later date
+- state: APPOINTMENT_SCHEDULED
+  - action: say what the scheduled appointment is
+  - transition: BYE
+- final state: ESCALATE
+  - action: say you are escalating to onsite provider
+- final state: BYE
+  - action: say goodbye
+
+###STATE MACHINE###
+
+###NOTES###
 
 NOTES
 
-###NOTES###
-- ER visit yesterday
-###NOTES###
+- patient name: Karen
+- symptom: knee pain
+- primary doctor: Dr. Patrick
+- referral doctor: Dr. Robinson
+  - appointment options
+    - Monday at 9am
+    - Tuesday at 10am
+    - Wednesday at 11am
+  - other appointment options
+    - Thursday at 1pm
+    - Friday at 2pm
+  - scheduled appointment:
 
-RULES are delimited by ###RULES###. 
-
-###RULES###
-
-[Rule: Greet]
-Condition: No greeting noted in NOTES
-Action: Greet, ask how they are feeling, and update NOTES
-
-[Rule: Visit]
-Condition: No follow-up on visit in NOTES
-Action: Ask if any questions after visit and update NOTES
-
-[Rule: Confusion]
-Condition: The patient seems confused in the conversation context
-Action: Offer to escalate to on-site provider
-
-###RULES###
-
-Steps for each turn of the conversation
-
-- Update NOTES internally based on conversation context and RULES
-- Ask one question that helps you satisfy the RULES applied to NOTES and the conversation context.`,
-  },
-  {
-    label: "Scenario 2",
-    content: `You are a friendly chat bot following up with a patient. 
-
-NOTES are delimited by ###NOTES###. Maintain and update the NOTES internally during the conversation. Be ready to show NOTES when asked.
-
-NOTES
-
-###NOTES###
-- knee pain
-- treatment plan to apply antibiotic ointment
-- pending action to make appointment with orthopedist
-###NOTES###
-
-RULES are delimited by ###RULES###. 
-
-###RULES###
-
-[Rule: Greet]
-Condition: No greeting noted in NOTES
-Action: Greet, ask how they are feeling, and update NOTES
-
-[Rule: Pain]
-Condition: No pain follow-up in NOTES
-Action: Ask for pain rating and update NOTES
-
-[Rule: New]
-Condition: No follow-up on new symptoms or conditions in NOTES
-Action: Ask about any new symptoms or conditions and update NOTES
-
-[Rule: Action]
-Condition: NOTES contains pending action with no follow-up on whether complete
-Action: Ask for status and update NOTES
-
-[Rule: Confusion]
-Condition: The patient seems confused in the conversation context
-Action: Offer to escalate to on-site provider
-
-###RULES###
-
-Steps for each turn of the conversation
-
-- Update NOTES internally based on conversation context and RULES
-- Ask one question that helps you satisfy the RULES applied to NOTES and the conversation context.`,
+###NOTES###    
+`,
   },
 ];
 
@@ -562,7 +561,7 @@ export function PromptForm({
       ref={formRef}
     >
       <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
-        {/* <Tooltip>
+        <Tooltip>
           <TooltipTrigger asChild>
             <Link
               to="/"
@@ -576,7 +575,7 @@ export function PromptForm({
             </Link>
           </TooltipTrigger>
           <TooltipContent>New Chat</TooltipContent>
-        </Tooltip> */}
+        </Tooltip>
         <TextareaAutosize
           ref={inputRef}
           tabIndex={0}
