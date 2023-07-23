@@ -332,18 +332,14 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
   );
 }
 
-export interface ChatList {
-  messages: Message[];
-}
-
-export function ChatList({ messages }: ChatList) {
+export function ChatList({ messages }: { messages: Message[] }) {
   if (!messages.length) {
     return null;
   }
 
   return (
     <div className="relative mx-auto max-w-2xl px-4">
-      {messages.map((message, index) => (
+      {messages.filter(m => m.role === 'assistant' || m.role === 'user').map((message, index) => (
         <div key={index}>
           <ChatMessage message={message} />
           {index < messages.length - 1 && (
