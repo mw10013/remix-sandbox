@@ -63,10 +63,10 @@ export default function Index() {
   };
   const initialMessages = composeInitialMessages(systemContent);
   return (
-    <div className="relative w-full h-full">
+    <main className="">
       <Chat id={id} initialMessages={initialMessages} />
       <SideSheet systemContent={systemContent} newChat={newChat} />
-    </div>
+    </main>
   );
 }
 

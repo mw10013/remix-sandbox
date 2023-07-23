@@ -19,14 +19,14 @@ export const links: LinksFunction = () => [
 
 export default function App() {
   return (
-    <html lang="en" suppressHydrationWarning className="h-full">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body className="h-full bg-background font-sans antialiased">
+      <body className="bg-background font-sans antialiased">
         <Toaster />
         <TooltipProvider>
           <Outlet />
