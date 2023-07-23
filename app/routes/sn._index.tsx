@@ -355,7 +355,8 @@ export function ChatList({ messages }: ChatList) {
   );
 }
 
-export function useAtBottom(offset = 0) {
+// Default offset of 0 seems not to work with fractional differences.
+export function useAtBottom(offset = 1) {
   const [isAtBottom, setIsAtBottom] = React.useState(false);
 
   // q: what is window.innerHeight?
@@ -366,14 +367,13 @@ export function useAtBottom(offset = 0) {
   // a: The offsetHeight property returns the viewable height of an element in pixels, including padding, border and scrollbar, but not the margin.
   React.useEffect(() => {
     const handleScroll = () => {
-      console.log({
-        innerHeight: window.innerHeight,
-        scrollY: window.scrollY,
-        offsetHeight: document.body.offsetHeight,
-        offset,
-        innerPlusScroll: window.innerHeight + window.scrollY,
-        offsetMinusOffset: document.body.offsetHeight - offset,
-      });
+      // console.log({
+      //   innerPlusScroll: window.innerHeight + window.scrollY,
+      //   offsetMinusOffset: document.body.offsetHeight - offset,
+      //   isAtBottom:
+      //     window.innerHeight + window.scrollY >=
+      //     document.body.offsetHeight - offset,
+      // });
       setIsAtBottom(
         window.innerHeight + window.scrollY >=
           document.body.offsetHeight - offset
@@ -423,8 +423,7 @@ export function ButtonScrollToBottom({ className, ...props }: ButtonProps) {
       size="icon"
       className={cn(
         "absolute right-4 top-1 z-10 bg-background transition-opacity duration-300 sm:right-8 md:top-2",
-        // isAtBottom ? "opacity-0" : "opacity-100",
-        "opacity-100",
+        isAtBottom ? "opacity-0" : "opacity-100",
         className
       )}
       onClick={() =>
@@ -436,7 +435,6 @@ export function ButtonScrollToBottom({ className, ...props }: ButtonProps) {
       {...props}
     >
       <IconArrowDown />
-      isAtBottom: {isAtBottom.toString()}
       <span className="sr-only">Scroll to bottom</span>
     </Button>
   );
@@ -623,61 +621,30 @@ function Chat({
   initialMessages: Message[];
 } & React.ComponentProps<"div">) {
   const { toast } = useToast();
-  const {
-    messages,
-    append,
-    reload,
-    stop,
-    isLoading,
-    input,
-    setInput,
-    // handleInputChange,
-    // handleSubmit,
-  } = useChat({
-    api: "/api/sn-messages",
-    id,
-    body: { id },
-    initialMessages,
-    initialInput: "Hello, I'm ready.",
-    onResponse(response) {
-      if (response.status === 401) {
-        toast({
-          variant: "destructive",
-          title: "Unauthorized",
-          description: response.statusText,
-        });
-      }
-    },
-  });
+  const { messages, append, reload, stop, isLoading, input, setInput } =
+    useChat({
+      api: "/api/sn-messages",
+      id,
+      body: { id },
+      initialMessages,
+      initialInput: "Hello, I'm ready.",
+      onResponse(response) {
+        if (response.status === 401) {
+          toast({
+            variant: "destructive",
+            title: "Unauthorized",
+            description: response.statusText,
+          });
+        }
+      },
+    });
   return (
-    <div className="w-full max-w-4xl mx-auto min-h-full p-6">
+    <>
       <div className={cn("pb-[200px] pt-4 md:pt-10", className)}>
         <ChatList messages={messages} />
         <ChatScrollAnchor trackVisibility={isLoading} />
       </div>
 
-      {/* <div className="col-span-2">
-        {messages.map((m) => (
-          <div key={m.id}>
-            {m.role === "user"
-              ? "User: "
-              : m.role === "assistant"
-              ? "AI: "
-              : "System: "}
-            {m.content.split("\n").map((line, i) =>
-              i === 0 ? (
-                <React.Fragment key={i}>
-                  <span>{line}</span>
-                  <br />
-                </React.Fragment>
-              ) : line === "" ? (
-                <br key={i} />
-              ) : (
-                <div key={i}>{line}</div>
-              )
-            )}
-          </div>
-        ))} */}
       <ChatPanel
         id={id}
         isLoading={isLoading}
@@ -688,6 +655,6 @@ function Chat({
         input={input}
         setInput={setInput}
       />
-    </div>
+    </>
   );
 }
