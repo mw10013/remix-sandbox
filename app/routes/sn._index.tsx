@@ -623,7 +623,6 @@ function Chat({
       id,
       body: { id },
       initialMessages,
-      initialInput: "Hello, I'm ready.",
       onResponse(response) {
         if (response.status === 401) {
           toast({
