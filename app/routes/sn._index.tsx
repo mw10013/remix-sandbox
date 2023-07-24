@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import type { V2_MetaFunction } from "@remix-run/node";
 import TextareaAutosize from "react-textarea-autosize";
 import type { ButtonProps } from "~/components/ui/button";
-import { Button, buttonVariants } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 import type { UseChatHelpers } from "ai/react";
 import { useChat } from "ai/react";
 import { cn, nanoid } from "~/lib/utils";
@@ -40,12 +40,10 @@ import {
   IconArrowDown,
   IconArrowElbow,
   IconOpenAI,
-  IconPlus,
   IconUser,
 } from "~/components/icons";
 import { useInView } from "react-intersection-observer";
 import { Textarea } from "~/components/ui/textarea";
-import { Link } from "@remix-run/react";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -560,22 +558,7 @@ export function PromptForm({
       }}
       ref={formRef}
     >
-      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              to="/"
-              className={cn(
-                buttonVariants({ size: "sm", variant: "outline" }),
-                "absolute left-0 top-4 h-8 w-8 rounded-full bg-background p-0 sm:left-4"
-              )}
-            >
-              <IconPlus />
-              <span className="sr-only">New Chat</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>New Chat</TooltipContent>
-        </Tooltip>
+      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background pr-8 sm:rounded-md sm:border sm:pr-12">
         <TextareaAutosize
           ref={inputRef}
           tabIndex={0}
