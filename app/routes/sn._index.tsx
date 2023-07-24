@@ -72,7 +72,7 @@ export default function Index() {
 
 const systemContents = [
   {
-    label:"Appointment",
+    label: "Appointment",
     content: `
 You are a friendly AI support agent following up with a patient. Use the provided STATE MACHINE, delimited by ###STATE MACHINE###, to guide the conversation and internally maintain and update the provided NOTES, delimited by ###NOTES###, during the conversation. Be ready to show NOTES when asked.
 
@@ -147,6 +147,86 @@ NOTES
 
 ###NOTES###    
 `,
+  },
+  {
+    label: "ER",
+    content: `You are a friendly chat bot following up with a patient. 
+
+NOTES are delimited by ###NOTES###. Maintain and update the NOTES internally during the conversation. Be ready to show NOTES when asked.
+
+NOTES
+
+###NOTES###
+- ER visit yesterday
+###NOTES###
+
+RULES are delimited by ###RULES###. 
+
+###RULES###
+
+[Rule: Greet]
+Condition: No greeting noted in NOTES
+Action: Greet, ask how they are feeling, and update NOTES
+
+[Rule: Visit]
+Condition: No follow-up on visit in NOTES
+Action: Ask if any questions after visit and update NOTES
+
+[Rule: Confusion]
+Condition: The patient seems confused in the conversation context
+Action: Offer to escalate to on-site provider
+
+###RULES###
+
+Steps for each turn of the conversation
+
+- Update NOTES internally based on conversation context and RULES
+- Ask one question that helps you satisfy the RULES applied to NOTES and the conversation context.`,
+  },
+  {
+    label: "Pain",
+    content: `You are a friendly chat bot following up with a patient. 
+
+NOTES are delimited by ###NOTES###. Maintain and update the NOTES internally during the conversation. Be ready to show NOTES when asked.
+
+NOTES
+
+###NOTES###
+- knee pain
+- treatment plan to apply antibiotic ointment
+- pending action to make appointment with orthopedist
+###NOTES###
+
+RULES are delimited by ###RULES###. 
+
+###RULES###
+
+[Rule: Greet]
+Condition: No greeting noted in NOTES
+Action: Greet, ask how they are feeling, and update NOTES
+
+[Rule: Pain]
+Condition: No pain follow-up in NOTES
+Action: Ask for pain rating and update NOTES
+
+[Rule: New]
+Condition: No follow-up on new symptoms or conditions in NOTES
+Action: Ask about any new symptoms or conditions and update NOTES
+
+[Rule: Action]
+Condition: NOTES contains pending action with no follow-up on whether complete
+Action: Ask for status and update NOTES
+
+[Rule: Confusion]
+Condition: The patient seems confused in the conversation context
+Action: Offer to escalate to on-site provider
+
+###RULES###
+
+Steps for each turn of the conversation
+
+- Update NOTES internally based on conversation context and RULES
+- Ask one question that helps you satisfy the RULES applied to NOTES and the conversation context.`,
   },
 ];
 
@@ -336,14 +416,16 @@ export function ChatList({ messages }: { messages: Message[] }) {
 
   return (
     <div className="relative mx-auto max-w-2xl px-4">
-      {messages.filter(m => m.role === 'assistant' || m.role === 'user').map((message, index) => (
-        <div key={index}>
-          <ChatMessage message={message} />
-          {index < messages.length - 1 && (
-            <Separator className="my-4 md:my-8" />
-          )}
-        </div>
-      ))}
+      {messages
+        .filter((m) => m.role === "assistant" || m.role === "user")
+        .map((message, index) => (
+          <div key={index}>
+            <ChatMessage message={message} />
+            {index < messages.length - 1 && (
+              <Separator className="my-4 md:my-8" />
+            )}
+          </div>
+        ))}
     </div>
   );
 }
