@@ -591,6 +591,7 @@ export function PromptForm({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                className="h-8 w-8 p-0"
                 type="submit"
                 size="icon"
                 disabled={isLoading || input === ""}
