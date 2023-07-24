@@ -48,8 +48,8 @@ dependencies:
     specifier: ^2.26.0
     version: 2.26.0
   ai:
-    specifier: ^2.1.20
-    version: 2.1.20(react@18.2.0)(svelte@4.1.1)(vue@3.3.4)
+    specifier: ^2.1.25
+    version: 2.1.25(react@18.2.0)(solid-js@1.7.8)(svelte@4.1.1)(vue@3.3.4)
   class-variance-authority:
     specifier: ^0.6.1
     version: 0.6.1
@@ -3534,15 +3534,18 @@ packages:
     resolution: {integrity: sha512-hCOfMzbFx5IDutmWLAt6MZwOUjIfSM9G9FyVxytmE4Rs/5YDPWQrD/+IR1w+FweD9H2oOZEnv36TmkjhNURBVA==}
     dev: true
 
-  /ai@2.1.20(react@18.2.0)(svelte@4.1.1)(vue@3.3.4):
-    resolution: {integrity: sha512-MZeq+kT9eUT+3H8QMffKuEZ/+wf4EYuANr5j69gHRg2Gre8UemXj48fAdZfzuzwwdshVOmwoaeT9pMwKl9h+vA==}
+  /ai@2.1.25(react@18.2.0)(solid-js@1.7.8)(svelte@4.1.1)(vue@3.3.4):
+    resolution: {integrity: sha512-CPGD/auacetvHbwt9TsnktOtc32A4S/5LT9/W+f1nZz9N1W1V5/WDEcr2jTglLVmvh8mXXFwLbKT/t9erly+Bg==}
     engines: {node: '>=14.6'}
     peerDependencies:
       react: ^18.2.0
+      solid-js: ^1.7.7
       svelte: ^3.0.0 || ^4.0.0
       vue: ^3.3.4
     peerDependenciesMeta:
       react:
+        optional: true
+      solid-js:
         optional: true
       svelte:
         optional: true
@@ -3552,10 +3555,13 @@ packages:
       eventsource-parser: 1.0.0
       nanoid: 3.3.6
       react: 18.2.0
-      sswr: 1.11.0(svelte@4.1.1)
+      solid-js: 1.7.8
+      solid-swr-store: 0.10.7(solid-js@1.7.8)(swr-store@0.10.6)
+      sswr: 2.0.0(svelte@4.1.1)
       svelte: 4.1.1
-      swr: 2.1.5(react@18.2.0)
-      swrv: 1.0.3(vue@3.3.4)
+      swr: 2.2.0(react@18.2.0)
+      swr-store: 0.10.6
+      swrv: 1.0.4(vue@3.3.4)
       vue: 3.3.4
     dev: false
 
@@ -9040,6 +9046,11 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /seroval@0.5.1:
+    resolution: {integrity: sha512-ZfhQVB59hmIauJG5Ydynupy8KHyr5imGNtdDhbZG68Ufh1Ynkv9KOYOAABf71oVbQxJ8VkWnMHAjEHE7fWkH5g==}
+    engines: {node: '>=10'}
+    dev: false
+
   /serve-static@1.15.0:
     resolution: {integrity: sha512-XGuRDNjXUijsUL0vl6nSD7cwURuzEgglbOaFuZM9g3kwDXOWVTck0jLzjPzGD+TazWbboZYu52/9/XPdUgne9g==}
     engines: {node: '>= 0.8.0'}
@@ -9150,6 +9161,24 @@ packages:
       smart-buffer: 4.2.0
     dev: true
 
+  /solid-js@1.7.8:
+    resolution: {integrity: sha512-XHBWk1FvFd0JMKljko7FfhefJMTSgYEuVKcQ2a8hzRXfiuSJAGsrPPafqEo+f6l+e8Oe3cROSpIL6kbzjC1fjQ==}
+    dependencies:
+      csstype: 3.1.2
+      seroval: 0.5.1
+    dev: false
+
+  /solid-swr-store@0.10.7(solid-js@1.7.8)(swr-store@0.10.6):
+    resolution: {integrity: sha512-A6d68aJmRP471aWqKKPE2tpgOiR5fH4qXQNfKIec+Vap+MGQm3tvXlT8n0I8UgJSlNAsSAUuw2VTviH2h3Vv5g==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      solid-js: ^1.2
+      swr-store: ^0.10
+    dependencies:
+      solid-js: 1.7.8
+      swr-store: 0.10.6
+    dev: false
+
   /sort-object-keys@1.1.3:
     resolution: {integrity: sha512-855pvK+VkU7PaKYPc+Jjnmt4EzejQHyhhF33q31qG8x7maDzkeFhAAThdCYay11CISO+qAMwjOBP+fPZe0IPyg==}
     dev: true
@@ -9194,13 +9223,13 @@ packages:
       minipass: 3.3.6
     dev: true
 
-  /sswr@1.11.0(svelte@4.1.1):
-    resolution: {integrity: sha512-D7nEdEH0A1TKZjA1wRP6frxw/dtTCuV70EK5/pELP+FrcPmyaP8jLC49mrg86Ez5cb5z3NQb2MPx2M7ZZlSupQ==}
+  /sswr@2.0.0(svelte@4.1.1):
+    resolution: {integrity: sha512-mV0kkeBHcjcb0M5NqKtKVg/uTIYNlIIniyDfSGrSfxpEdM9C365jK0z55pl9K0xAkNTJi2OAOVFQpgMPUk+V0w==}
     peerDependencies:
       svelte: ^4.0.0
     dependencies:
       svelte: 4.1.1
-      swrev: 3.0.0
+      swrev: 4.0.0
     dev: false
 
   /statuses@2.0.1:
@@ -9402,8 +9431,15 @@ packages:
       periscopic: 3.1.0
     dev: false
 
-  /swr@2.1.5(react@18.2.0):
-    resolution: {integrity: sha512-/OhfZMcEpuz77KavXST5q6XE9nrOBOVcBLWjMT+oAE/kQHyE3PASrevXCtQDZ8aamntOfFkbVJp7Il9tNBQWrw==}
+  /swr-store@0.10.6:
+    resolution: {integrity: sha512-xPjB1hARSiRaNNlUQvWSVrG5SirCjk2TmaUyzzvk69SZQan9hCJqw/5rG9iL7xElHU784GxRPISClq4488/XVw==}
+    engines: {node: '>=10'}
+    dependencies:
+      dequal: 2.0.3
+    dev: false
+
+  /swr@2.2.0(react@18.2.0):
+    resolution: {integrity: sha512-AjqHOv2lAhkuUdIiBu9xbuettzAzWXmCEcLONNKJRba87WAefz8Ca9d6ds/SzrPc235n1IxWYdhJ2zF3MNUaoQ==}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
     dependencies:
@@ -9411,12 +9447,12 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /swrev@3.0.0:
-    resolution: {integrity: sha512-QJuZiptdOmbDY45pECBRVEgnoBlOKjeT2MWVz04wKHpWX15hM3P7EjcIbHDg5yLoPCMQ7to3349MEE+l9QF5HA==}
+  /swrev@4.0.0:
+    resolution: {integrity: sha512-LqVcOHSB4cPGgitD1riJ1Hh4vdmITOp+BkmfmXRh4hSF/t7EnS4iD+SOTmq7w5pPm/SiPeto4ADbKS6dHUDWFA==}
     dev: false
 
-  /swrv@1.0.3(vue@3.3.4):
-    resolution: {integrity: sha512-sl+eLEE+aPPjhP1E8gQ75q3RPRyw5Gd/kROnrTFo3+LkCeLskv7F+uAl5W97wgJkzitobL6FLsRPVm0DgIgN8A==}
+  /swrv@1.0.4(vue@3.3.4):
+    resolution: {integrity: sha512-zjEkcP8Ywmj+xOJW3lIT65ciY/4AL4e/Or7Gj0MzU3zBJNMdJiT8geVZhINavnlHRMMCcJLHhraLTAiDOTmQ9g==}
     peerDependencies:
       vue: '>=3.2.26 < 4'
     dependencies:
