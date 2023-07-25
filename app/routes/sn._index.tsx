@@ -476,8 +476,11 @@ export function ChatList({ messages }: { messages: Message[] }) {
 /**
  * Returns boolean indicating whether the user has scrolled to the bottom of the page.
  * Offset defaults to 1 to accomodate fractional scrolling.
+ * 
  * Note this only recalcs after a scroll event. If you are at the bottom of the
  * page and the page height changes, this will not detect the height change until a scroll event.
+ * 
+ * Taken from [ai-chatbot](https://github.com/vercel-labs/ai-chatbot)
  */
 export function useAtBottom(offset = 1) {
   // default is 1 to accomodate fractional scrolling
