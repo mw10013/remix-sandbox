@@ -419,11 +419,7 @@ export const MemoizedReactMarkdown: React.FC<Options> = React.memo(
     prevProps.className === nextProps.className
 );
 
-export interface ChatMessageProps {
-  message: Message;
-}
-
-export function ChatMessage({ message, ...props }: ChatMessageProps) {
+export function ChatMessage({ message, ...props }: { message: Message }) {
   return (
     <div
       className={cn("group relative mb-4 flex items-start md:-ml-12")}
@@ -442,47 +438,15 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
       <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
         <MemoizedReactMarkdown
           className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
-          // remarkPlugins={[remarkGfm, remarkMath]}
           remarkPlugins={[remarkGfm]}
           components={{
             p({ children }) {
               return <p className="mb-2 last:mb-0">{children}</p>;
             },
-            // code({ node, inline, className, children, ...props }) {
-            //   if (children.length) {
-            //     if (children[0] == '▍') {
-            //       return (
-            //         <span className="mt-1 animate-pulse cursor-default">▍</span>
-            //       )
-            //     }
-
-            //     children[0] = (children[0] as string).replace('`▍`', '▍')
-            //   }
-
-            //   const match = /language-(\w+)/.exec(className || '')
-
-            //   if (inline) {
-            //     return (
-            //       <code className={className} {...props}>
-            //         {children}
-            //       </code>
-            //     )
-            //   }
-
-            //   return (
-            //     <CodeBlock
-            //       key={Math.random()}
-            //       language={(match && match[1]) || ''}
-            //       value={String(children).replace(/\n$/, '')}
-            //       {...props}
-            //     />
-            //   )
-            // }
           }}
         >
           {message.content}
         </MemoizedReactMarkdown>
-        {/* <ChatMessageActions message={message} /> */}
       </div>
     </div>
   );
@@ -545,11 +509,11 @@ export function useAtBottom(offset = 1) {
   return isAtBottom;
 }
 
-interface ChatScrollAnchorProps {
+export function ChatScrollAnchor({
+  trackVisibility,
+}: {
   trackVisibility?: boolean;
-}
-
-export function ChatScrollAnchor({ trackVisibility }: ChatScrollAnchorProps) {
+}) {
   const isAtBottom = useAtBottom();
   const { ref, entry, inView } = useInView({
     trackVisibility,
@@ -594,57 +558,19 @@ export function ButtonScrollToBottom({ className, ...props }: ButtonProps) {
   );
 }
 
-export interface ChatPanelProps
-  extends Pick<
-    UseChatHelpers,
-    | "append"
-    | "isLoading"
-    | "reload"
-    | "messages"
-    | "stop"
-    | "input"
-    | "setInput"
-  > {
-  id?: string;
-}
-
 export function ChatPanel({
   id,
   isLoading,
-  stop,
   append,
-  reload,
   input,
   setInput,
-  messages,
-}: ChatPanelProps) {
+}: {
+  id?: string;
+} & Pick<UseChatHelpers, "append" | "isLoading" | "input" | "setInput">) {
   return (
     <div className="fixed inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
       <ButtonScrollToBottom />
       <div className="mx-auto sm:max-w-2xl sm:px-4">
-        {/* <div className="flex h-10 items-center justify-center">
-          {isLoading ? (
-            <Button
-              variant="outline"
-              onClick={() => stop()}
-              className="bg-background"
-            >
-              <IconStop className="mr-2" />
-              Stop generating
-            </Button>
-          ) : (
-            messages?.length > 0 && (
-              <Button
-                variant="outline"
-                onClick={() => reload()}
-                className="bg-background"
-              >
-                <IconRefresh className="mr-2" />
-                Regenerate response
-              </Button>
-            )
-          )}
-        </div> */}
         <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
           <PromptForm
             onSubmit={async (value) => {
@@ -761,22 +687,21 @@ function Chat({
   initialMessages: Message[];
 } & React.ComponentProps<"div">) {
   const { toast } = useToast();
-  const { messages, append, reload, stop, isLoading, input, setInput } =
-    useChat({
-      api: "/api/sn-messages",
-      id,
-      body: { id },
-      initialMessages,
-      onResponse(response) {
-        if (response.status === 401) {
-          toast({
-            variant: "destructive",
-            title: "Unauthorized",
-            description: response.statusText,
-          });
-        }
-      },
-    });
+  const { messages, append, isLoading, input, setInput } = useChat({
+    api: "/api/sn-messages",
+    id,
+    body: { id },
+    initialMessages,
+    onResponse(response) {
+      if (response.status === 401) {
+        toast({
+          variant: "destructive",
+          title: "Unauthorized",
+          description: response.statusText,
+        });
+      }
+    },
+  });
   return (
     <>
       <div className={cn("pb-[200px] pt-4 md:pt-10", className)}>
@@ -787,10 +712,7 @@ function Chat({
       <ChatPanel
         id={id}
         isLoading={isLoading}
-        stop={stop}
         append={append}
-        reload={reload}
-        messages={messages}
         input={input}
         setInput={setInput}
       />
