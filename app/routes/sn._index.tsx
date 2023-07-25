@@ -473,8 +473,14 @@ export function ChatList({ messages }: { messages: Message[] }) {
   );
 }
 
-// Default offset of 0 seems not to work with fractional differences.
+/**
+ * Returns boolean indicating whether the user has scrolled to the bottom of the page.
+ * Offset defaults to 1 to accomodate fractional scrolling.
+ * Note this only recalcs after a scroll event. If you are at the bottom of the
+ * page and the page height changes, this will not detect the height change until a scroll event.
+ */
 export function useAtBottom(offset = 1) {
+  // default is 1 to accomodate fractional scrolling
   const [isAtBottom, setIsAtBottom] = React.useState(false);
 
   // q: what is window.innerHeight?
@@ -485,13 +491,6 @@ export function useAtBottom(offset = 1) {
   // a: The offsetHeight property returns the viewable height of an element in pixels, including padding, border and scrollbar, but not the margin.
   React.useEffect(() => {
     const handleScroll = () => {
-      // console.log({
-      //   innerPlusScroll: window.innerHeight + window.scrollY,
-      //   offsetMinusOffset: document.body.offsetHeight - offset,
-      //   isAtBottom:
-      //     window.innerHeight + window.scrollY >=
-      //     document.body.offsetHeight - offset,
-      // });
       setIsAtBottom(
         window.innerHeight + window.scrollY >=
           document.body.offsetHeight - offset

@@ -1,67 +1,45 @@
 import React from "react";
 import { useInView } from "react-intersection-observer";
 import { IconArrowDown } from "~/components/icons";
-import { Button, ButtonProps } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
+import type { ButtonProps } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardFooter } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
 export default function Route() {
-  const [count, setCount] = React.useState(10);
+  const [count, setCount] = React.useState(12);
   const isAtBottom = useAtBottom();
   return (
     <div className="max-w-md mx-auto bg-slate-100 flex flex-col gap-2">
       <Card className="fixed top-2 right-2">
         <CardContent>
           <p className="leading-7 [&:not(:first-child)]:mt-6">
-            <span className="font-bold">isAtBottom:</span> {isAtBottom + ""}<br />
+            <span className="font-bold">isAtBottom:</span> {isAtBottom + ""}
+            <br />
             <span className="font-bold">Count:</span> {count}
           </p>
         </CardContent>
         <CardFooter>
-            <Button
-                variant="outline"
-                onClick={() => setCount((c) => c + 1)}
-            >
-                Increment
-            </Button>
+          <Button variant="outline" onClick={() => setCount((c) => c + 1)}>
+            Increment
+          </Button>
         </CardFooter>
       </Card>
       {[...Array(count)].map((_, i) => (
         <div key={i} className="p-4 bg-purple-300">
-            {i}
-            </div>
-        ))}
+          {i}
+        </div>
+      ))}
     </div>
   );
 }
 
 export function useAtBottom(offset = 1) {
+  // default is 1 to work accomodate fractional scrolling
   const [isAtBottom, setIsAtBottom] = React.useState(false);
 
-  // q: what is window.innerHeight?
-  // a: The innerHeight property returns the height of a window's content area. This includes the area inside the browser window, as well as the area below the horizontal scroll bar if present.
-  // q: what is window.scrollY?
-  // a: The scrollY property returns the number of pixels that the document is currently scrolled vertically. This value is subpixel precise in modern browsers, meaning that it isn't necessarily a whole number. You can get the number of pixels the document is scrolled horizontally from the scrollX property.
-  // q: what is document.body.offsetHeight?
-  // a: The offsetHeight property returns the viewable height of an element in pixels, including padding, border and scrollbar, but not the margin.
   React.useEffect(() => {
     const handleScroll = () => {
-      // console.log({
-      //   innerPlusScroll: window.innerHeight + window.scrollY,
-      //   offsetMinusOffset: document.body.offsetHeight - offset,
-      //   isAtBottom:
-      //     window.innerHeight + window.scrollY >=
-      //     document.body.offsetHeight - offset,
-      // });
       setIsAtBottom(
         window.innerHeight + window.scrollY >=
           document.body.offsetHeight - offset
