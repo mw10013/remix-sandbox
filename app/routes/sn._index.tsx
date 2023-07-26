@@ -483,7 +483,6 @@ export function ChatList({ messages }: { messages: Message[] }) {
  * Taken from [ai-chatbot](https://github.com/vercel-labs/ai-chatbot)
  */
 export function useAtBottom(offset = 1) {
-  // default is 1 to accomodate fractional scrolling
   const [isAtBottom, setIsAtBottom] = React.useState(false);
 
   // q: what is window.innerHeight?
@@ -518,20 +517,20 @@ export function ChatScrollAnchor({
 }) {
   const isAtBottom = useAtBottom();
   const { ref, entry, inView } = useInView({
-    trackVisibility,
-    delay: 100,
-    rootMargin: "0px 0px -150px 0px",
+    rootMargin: "0px 0px -20px 0px",
   });
 
   React.useEffect(() => {
+    // console.log({ isAtBottom, inView, trackVisibility });
     if (isAtBottom && trackVisibility && !inView) {
+      // console.log("scrollIntoView")
       entry?.target.scrollIntoView({
         block: "start",
       });
     }
   }, [inView, entry, isAtBottom, trackVisibility]);
 
-  return <div ref={ref} className="h-px w-full" />;
+  return <div ref={ref} className="h-[100px] w-full bg-transparent" />;
 }
 
 export function ButtonScrollToBottom({ className, ...props }: ButtonProps) {
@@ -706,7 +705,8 @@ function Chat({
   });
   return (
     <>
-      <div className={cn("pb-[200px] pt-4 md:pt-10", className)}>
+      {/* <div className={cn("pb-[200px] pt-4 md:pt-10", className)}> */}
+      <div className={cn("pb-[100px] pt-4 md:pt-10", className)}>
         <ChatList messages={messages} />
         <ChatScrollAnchor trackVisibility={isLoading} />
       </div>

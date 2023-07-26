@@ -1,7 +1,7 @@
 import React from "react";
-import { useInView } from "react-intersection-observer";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardFooter } from "~/components/ui/card";
+import { useInView } from "react-intersection-observer";
 
 export function useAtBottom(offset = 1) {
   const [isAtBottom, setIsAtBottom] = React.useState(false);
