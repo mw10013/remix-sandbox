@@ -513,7 +513,8 @@ export function useAtBottom(offset = 1) {
 export function ChatScrollAnchor() {
   const isAtBottom = useAtBottom();
   const { ref, entry, inView } = useInView({
-    rootMargin: "0px 0px -20px 0px",
+    threshold: 1,
+    // rootMargin: "0px 0px -20px 0px",
   });
 
   React.useEffect(() => {
@@ -699,7 +700,7 @@ function Chat({
   });
   return (
     <>
-      <div className={cn("pb-[100px] pt-4 md:pt-10", className)}>
+      <div className={cn("pt-4 md:pt-10", className)}>
         <ChatList messages={messages} />
         <ChatScrollAnchor />
       </div>
