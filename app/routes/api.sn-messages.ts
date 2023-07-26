@@ -7,10 +7,7 @@ import { StreamingTextResponse } from "~/lib/ai-hacks";
 
 export const action = async ({ request }: ActionArgs) => {
   const { messages } = await request.json();
-  //   console.log(messages);
   //   const { content: question } = messages[messages.length - 1];
-  //   console.log("chat-messages: ", question);
-
   const { stream, handlers } = LangChainStream();
   const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo",
