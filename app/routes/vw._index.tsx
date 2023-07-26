@@ -29,7 +29,7 @@ export default function Route() {
   const [count, setCount] = React.useState(11);
   const isAtBottom = useAtBottom();
   const { ref, entry, inView } = useInView({
-    rootMargin: "0px 0px -4px 0px",
+    rootMargin: "0px 0px -200px 0px",
   });
 
   React.useEffect(() => {
@@ -40,7 +40,7 @@ export default function Route() {
   }, [inView, entry, isAtBottom]);
 
   return (
-    <div className="max-w-md mx-auto bg-slate-100 flex flex-col gap-2 p-8">
+    <div className="max-w-md mx-auto bg-slate-100 flex flex-col gap-2 p-8 pb-[200px]">
       <Card className="fixed top-3 right-3 w-48">
         <CardContent>
           <p className="leading-7 [&:not(:first-child)]:mt-6">
@@ -62,7 +62,7 @@ export default function Route() {
           {i}
         </div>
       ))}
-      <div ref={ref} className="h-8 w-full bg-orange-400" />
+      <div ref={ref} className="h-0 w-full bg-orange-400" />
     </div>
   );
 }
