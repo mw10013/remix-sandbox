@@ -694,14 +694,16 @@ function Chat({
     id,
     body: { id },
     initialMessages,
-    onResponse(response) {
-      if (response.status === 401) {
-        toast({
-          variant: "destructive",
-          title: "Unauthorized",
-          description: response.statusText,
-        });
-      }
+    onError(error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        description: (
+          <div
+            dangerouslySetInnerHTML={{ __html: error.message.replace(/\n/g, "<br>") }}
+          />
+        ),
+      });
     },
   });
   return (
