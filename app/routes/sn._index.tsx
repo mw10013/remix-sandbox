@@ -476,10 +476,10 @@ export function ChatList({ messages }: { messages: Message[] }) {
 /**
  * Returns boolean indicating whether the user has scrolled to the bottom of the page.
  * Offset defaults to 1 to accomodate fractional scrolling.
- * 
+ *
  * Note this only recalcs after a scroll event. If you are at the bottom of the
  * page and the page height changes, this will not detect the height change until a scroll event.
- * 
+ *
  * Taken from [ai-chatbot](https://github.com/vercel-labs/ai-chatbot)
  */
 export function useAtBottom(offset = 1) {
@@ -510,25 +510,19 @@ export function useAtBottom(offset = 1) {
   return isAtBottom;
 }
 
-export function ChatScrollAnchor({
-  trackVisibility,
-}: {
-  trackVisibility?: boolean;
-}) {
+export function ChatScrollAnchor() {
   const isAtBottom = useAtBottom();
   const { ref, entry, inView } = useInView({
     rootMargin: "0px 0px -20px 0px",
   });
 
   React.useEffect(() => {
-    // console.log({ isAtBottom, inView, trackVisibility });
-    if (isAtBottom && trackVisibility && !inView) {
-      // console.log("scrollIntoView")
+    if (isAtBottom && !inView) {
       entry?.target.scrollIntoView({
         block: "start",
       });
     }
-  }, [inView, entry, isAtBottom, trackVisibility]);
+  }, [inView, entry, isAtBottom]);
 
   return <div ref={ref} className="h-[100px] w-full bg-transparent" />;
 }
@@ -705,10 +699,9 @@ function Chat({
   });
   return (
     <>
-      {/* <div className={cn("pb-[200px] pt-4 md:pt-10", className)}> */}
       <div className={cn("pb-[100px] pt-4 md:pt-10", className)}>
         <ChatList messages={messages} />
-        <ChatScrollAnchor trackVisibility={isLoading} />
+        <ChatScrollAnchor />
       </div>
 
       <ChatPanel
