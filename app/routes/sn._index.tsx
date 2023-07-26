@@ -510,6 +510,12 @@ export function useAtBottom(offset = 1) {
   return isAtBottom;
 }
 
+/**
+ * Returns a transparent 100px div that is scrolled to when the user is at the bottom of the page.
+ *
+ * Threshold is 1 to ensure the entire div is in view since the div also serves as padding.
+ * @todo Multiple lines of text streamed rapidly can get ahead of the logic.
+ */
 export function ChatScrollAnchor() {
   const isAtBottom = useAtBottom();
   const { ref, entry, inView } = useInView({
