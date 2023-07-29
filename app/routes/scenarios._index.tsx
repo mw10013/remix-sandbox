@@ -1,7 +1,5 @@
-export default function ScenariosIndex() {
-  return (
-    <div>
-      <h1>Index</h1>
-    </div>
-  );
+import { redirect } from "@remix-run/node";
+
+export function loader() {
+  return redirect("/scenarios/appointment");
 }
