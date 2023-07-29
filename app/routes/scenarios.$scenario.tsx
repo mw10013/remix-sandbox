@@ -12,25 +12,6 @@ import type { UseChatHelpers } from "ai/react";
 import { useChat } from "ai/react";
 import { cn, nanoid } from "~/lib/utils";
 import type { Message } from "ai";
-import { PanelRightOpen } from "lucide-react";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { Label } from "~/components/ui/label";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "~/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
@@ -45,7 +26,6 @@ import {
   IconUser,
 } from "~/components/icons";
 import { useInView } from "react-intersection-observer";
-import { Textarea } from "~/components/ui/textarea";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -55,6 +35,7 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export function loader({ params }: LoaderArgs) {
+  console.log({ params });
   const scenario = scenarios.find((s) => s.dynamicSegment === params.scenario);
   if (!scenario) {
     throw new Error(`Scenario not found: ${params.scenario}`);
@@ -62,25 +43,16 @@ export function loader({ params }: LoaderArgs) {
 
   return json({
     systemContent: scenario.content,
+    id: nanoid(),
   });
 }
 
-
 export default function Scenario() {
-  const data = useLoaderData<typeof loader>();
-  const [id, setId] = React.useState(nanoid());
-  const [systemContent, setSystemContent] = React.useState(
-    data.systemContent
-  );
-  const newChat = (systemContent: string) => {
-    setId(nanoid());
-    setSystemContent(systemContent);
-  };
+  const {systemContent, id} = useLoaderData<typeof loader>();
   const initialMessages = composeInitialMessages(systemContent);
   return (
     <main className="">
       <Chat id={id} initialMessages={initialMessages} />
-      <SideSheet systemContent={systemContent} newChat={newChat} />
     </main>
   );
 }
@@ -173,85 +145,85 @@ NOTES
 ###NOTES###    
 `,
   },
-  {
-    title: "original",
-    dynamicSegment: "original",
-    label: "Original",
-    content: `
-You are a friendly AI support agent following up with a patient. Use the provided STATE MACHINE, delimited by ###STATE MACHINE###, to guide the conversation and internally maintain and update the provided NOTES, delimited by ###NOTES###, during the conversation. Be ready to show NOTES when asked.
+  //   {
+  //     title: "original",
+  //     dynamicSegment: "original",
+  //     label: "Original",
+  //     content: `
+  // You are a friendly AI support agent following up with a patient. Use the provided STATE MACHINE, delimited by ###STATE MACHINE###, to guide the conversation and internally maintain and update the provided NOTES, delimited by ###NOTES###, during the conversation. Be ready to show NOTES when asked.
 
-###STATE MACHINE###
-STATE MACHINE
+  // ###STATE MACHINE###
+  // STATE MACHINE
 
-- initial state: GREET
-- state: GREET
-  - action: say hello and ask patient if ready to begin call
-  - transition: SYMPTOM
-    - condition: patient is ready
-  - transition: BYE
-    - condition: patient is not ready
-- state: SYMPTOM
-  - action: ask for rating on knee pain from 0-10
-  - transition: REFERRAL
-    - condition: patient response with rating
-    - action: update NOTES with knee pain rating
-  - transition: ESCALATE
-    - condition: patient is confused
-- state: REFERRAL
-  - action: tell the patient that the primary doctor recommends follow-up with the referral doctor.
-  - transition: APPOINTMENT_OPTIONS
-- state: APPOINTMENT_OPTIONS
-  - action: show the appointment options and ask if any will work
-  - transition: APPOINTMENT_SCHEDULED
-    - condition: patient selects an option that matches
-    - action: update NOTES with the selection as scheduled appointment.
-  - transition: OTHER_APPOINTMENT_OPTIONS
-    - condition: patient does not select an option
-- state: OTHER_APPOINTMENT_OPTIONS
-  - action: show the other appointment options and ask if any will work
-  - transition: APPOINTMENT_SCHEDULED
-    - condition: patient selects an option that matches
-    - action: update NOTES with the selection as scheduled appointment.
-  - transition: ESCALATE
-    - condition: patient does not select an option or is confused
-- state: PREFERRED_APPOINTMENT_OPTION
-  - action: ask for a preferred appointment date and time so you can check with the referral doctor and callback later.
-  - transition: BYE
-    - condition: patient responds with preference
-    - action: update NOTES with preference as preferred appointment.
-  - transition: BYE
-    - condition: patient has no preference
-    - action: say you will follow-up on this at a later date
-- state: APPOINTMENT_SCHEDULED
-  - action: say what the scheduled appointment is
-  - transition: BYE
-- final state: ESCALATE
-  - action: say you are escalating to onsite provider
-- final state: BYE
-  - action: say goodbye
+  // - initial state: GREET
+  // - state: GREET
+  //   - action: say hello and ask patient if ready to begin call
+  //   - transition: SYMPTOM
+  //     - condition: patient is ready
+  //   - transition: BYE
+  //     - condition: patient is not ready
+  // - state: SYMPTOM
+  //   - action: ask for rating on knee pain from 0-10
+  //   - transition: REFERRAL
+  //     - condition: patient response with rating
+  //     - action: update NOTES with knee pain rating
+  //   - transition: ESCALATE
+  //     - condition: patient is confused
+  // - state: REFERRAL
+  //   - action: tell the patient that the primary doctor recommends follow-up with the referral doctor.
+  //   - transition: APPOINTMENT_OPTIONS
+  // - state: APPOINTMENT_OPTIONS
+  //   - action: show the appointment options and ask if any will work
+  //   - transition: APPOINTMENT_SCHEDULED
+  //     - condition: patient selects an option that matches
+  //     - action: update NOTES with the selection as scheduled appointment.
+  //   - transition: OTHER_APPOINTMENT_OPTIONS
+  //     - condition: patient does not select an option
+  // - state: OTHER_APPOINTMENT_OPTIONS
+  //   - action: show the other appointment options and ask if any will work
+  //   - transition: APPOINTMENT_SCHEDULED
+  //     - condition: patient selects an option that matches
+  //     - action: update NOTES with the selection as scheduled appointment.
+  //   - transition: ESCALATE
+  //     - condition: patient does not select an option or is confused
+  // - state: PREFERRED_APPOINTMENT_OPTION
+  //   - action: ask for a preferred appointment date and time so you can check with the referral doctor and callback later.
+  //   - transition: BYE
+  //     - condition: patient responds with preference
+  //     - action: update NOTES with preference as preferred appointment.
+  //   - transition: BYE
+  //     - condition: patient has no preference
+  //     - action: say you will follow-up on this at a later date
+  // - state: APPOINTMENT_SCHEDULED
+  //   - action: say what the scheduled appointment is
+  //   - transition: BYE
+  // - final state: ESCALATE
+  //   - action: say you are escalating to onsite provider
+  // - final state: BYE
+  //   - action: say goodbye
 
-###STATE MACHINE###
+  // ###STATE MACHINE###
 
-###NOTES###
+  // ###NOTES###
 
-NOTES
+  // NOTES
 
-- patient name: Karen
-- symptom: knee pain
-- primary doctor: Dr. Patrick
-- referral doctor: Dr. Robinson
-  - appointment options
-    - Monday at 9am
-    - Tuesday at 10am
-    - Wednesday at 11am
-  - other appointment options
-    - Thursday at 1pm
-    - Friday at 2pm
-  - scheduled appointment:
+  // - patient name: Karen
+  // - symptom: knee pain
+  // - primary doctor: Dr. Patrick
+  // - referral doctor: Dr. Robinson
+  //   - appointment options
+  //     - Monday at 9am
+  //     - Tuesday at 10am
+  //     - Wednesday at 11am
+  //   - other appointment options
+  //     - Thursday at 1pm
+  //     - Friday at 2pm
+  //   - scheduled appointment:
 
-###NOTES###    
-`,
-  },
+  // ###NOTES###
+  // `,
+  //   },
   {
     title: "ER",
     dynamicSegment: "er",
@@ -351,94 +323,6 @@ function composeInitialMessages(systemContent: string): Message[] {
       content: `Hello. This is the St. John's Riverside Hospital virtual nurse. Are you ready for your follow-up call?`,
     },
   ];
-}
-
-function ContentsDropDown({
-  textAreaRef,
-  contents,
-}: {
-  textAreaRef: React.RefObject<HTMLTextAreaElement>;
-  contents: { label: string; content: string }[];
-}) {
-  const handler = (content: string) => () => {
-    if (textAreaRef.current) {
-      textAreaRef.current.value = content;
-      textAreaRef.current.focus();
-    }
-  };
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-        >
-          <DotsHorizontalIcon className="h-4 w-4" />
-          <span className="sr-only">Open menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        {contents.map((c) => (
-          <DropdownMenuItem key={c.label} onClick={handler(c.content)}>
-            {c.label}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-function SideSheet({
-  systemContent,
-  newChat,
-}: {
-  systemContent: string;
-  newChat: (systemContent: string) => void;
-}) {
-  const systemTextAreaRef = React.useRef<HTMLTextAreaElement>(null);
-
-  return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="fixed top-2 right-2">
-          <PanelRightOpen className="h-4 w-4" />
-        </Button>
-      </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[640px] sm:max-w-xl">
-        <SheetHeader>
-          <SheetTitle>Configure Scenario</SheetTitle>
-          <SheetDescription></SheetDescription>
-        </SheetHeader>
-        <div className="flex flex-col gap-2">
-          <div className="flex justify-between items-baseline">
-            <Label htmlFor="systemTextArea">System</Label>
-            <ContentsDropDown
-              textAreaRef={systemTextAreaRef}
-              contents={scenarios}
-            />
-          </div>
-          <Textarea
-            id="systemTextArea"
-            ref={systemTextAreaRef}
-            rows={30}
-            defaultValue={systemContent}
-          />
-        </div>
-        <SheetFooter className="mt-2">
-          <SheetClose asChild>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                newChat(systemTextAreaRef.current?.value ?? "");
-              }}
-            >
-              Run
-            </Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
-  );
 }
 
 export const MemoizedReactMarkdown: React.FC<Options> = React.memo(

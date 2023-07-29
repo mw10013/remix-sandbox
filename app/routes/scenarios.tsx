@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-pascal-case */
 import { Link, Outlet, useLocation } from "@remix-run/react";
 import { cn } from "~/lib/utils";
 import { scenarios } from "./scenarios.$scenario";
@@ -17,8 +16,8 @@ export default function Scenarios() {
   );
 }
 
-const Icons = {
-  logo: (props: React.HTMLAttributes<SVGElement>) => (
+function IconLogo(props: React.HTMLAttributes<SVGElement>) {
+  return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" {...props}>
       <rect width="256" height="256" fill="none" />
       <line
@@ -44,8 +43,8 @@ const Icons = {
         strokeWidth="16"
       />
     </svg>
-  ),
-};
+  );
+}
 
 export function MainNav() {
   const pathname = useLocation().pathname;
@@ -53,7 +52,7 @@ export function MainNav() {
   return (
     <div className="mr-4 hidden md:flex">
       <Link to="/scenarios" className="mr-6 flex items-center space-x-2">
-        <Icons.logo className="h-6 w-6" />
+        <IconLogo className="h-6 w-6" />
         <span className="hidden font-bold sm:inline-block">ContinueWell</span>
       </Link>
       <nav className="flex items-center space-x-6 text-sm font-medium">
