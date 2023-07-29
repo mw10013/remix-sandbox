@@ -85,7 +85,7 @@ export default function Scenario() {
   );
 }
 
-const scenarios = [
+export const scenarios = [
   {
     title: "Appointment",
     dynamicSegment: "appointment",
