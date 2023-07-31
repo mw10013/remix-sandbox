@@ -59,7 +59,7 @@ export default function Scenario() {
 
 export const scenarios = [
   {
-    title: "Appointment",
+    title: "Appointment Reminder and Scheduling",
     dynamicSegment: "appointment",
     content: `
 # Prompt
@@ -68,7 +68,7 @@ You are a call center agent. Follow the provided call script in your conversatio
 
 # Call Script
 
-- "Hi, Karen. This is the St. John's Riverside virtual nurse, checking in to see how you're doing today. Are you ready for your follow-up call?"
+- "Hi, Karen. This is the St. John's Riverside virtual nurse, checking in to see how you're doing today. Are you ready for your follow-up conversation?"
   - No: "I understand. I will call you back at a more convenient time. Goodbye." Goto END
   - Yes: "Great! Let's get started."
 - "How is your knee pain today?"
@@ -82,11 +82,32 @@ You are a call center agent. Follow the provided call script in your conversatio
     - Chooses time: "Great, Karen. Your appointment with Dr. Robinson is scheduled for {chosen time}. We look forward to seeing you then. Goodbye." Goto END 
     - No: "Please hold while I transfer your call to an onsite provider who can assist you further." Goto END
 - END: ""
-`
+`,
   },
   {
-    title: "Rx Reminder",
-    dynamicSegment: "rx-reminder",
+    title: "Symptom Evaluation",
+    dynamicSegment: "evaluation",
+    content: `
+# Prompt
+
+You are a call center agent. Follow the provided call script in your conversation with a user.
+
+# Call Script
+
+- "Hi, Karen. This is the St. John's Riverside virtual nurse, checking in to see how you're doing today. Are you ready for your follow-up conversation?"
+  - No: "I understand. I will call you back at a more convenient time. Goodbye." Goto END
+  - Yes: "Great! Let's get started."
+- "How is your knee pain today?"
+  - Bad or painful: "I'm sorry to hear that, Karen. Would you like to speak to our onsite provider?"
+    - Yes: "Please hold while I transfer you to Dr. Attila." Goto END
+    - No: "Understood. Thanks for your time. Goodbye." Goto END
+  - Okay or manageable: "I'm glad to hear that, Karen. Thanks for your time. Goodbye." Goto END
+- END: ""
+    `,
+  },
+  {
+    title: "Prescription Reminder",
+    dynamicSegment: "prescription",
     content: `
   # Prompt
 
@@ -94,7 +115,7 @@ You are a call center agent. Follow the provided call script in your conversatio
   
   # Call Script
   
-  - "Hi, Karen. This is the St. John's Riverside virtual nurse, checking in to see how you're doing today. Are you ready for your follow-up call?"
+  - "Hi, Karen. This is the St. John's Riverside virtual nurse, checking in to see how you're doing today. Are you ready for your follow-up conversation?"
     - No: "I understand. I will call you back at a more convenient time. Goodbye." Goto END
     - Yes: "Great! Let's get started."
     - "How is your knee pain today?"
@@ -125,7 +146,7 @@ function composeInitialMessages(systemContent: string): Message[] {
     {
       id: "1",
       role: "assistant",
-      content: `Hi, Karen. This is the St. John's Riverside virtual nurse, checking in to see how you're doing today. Are you ready for your follow-up call?`,
+      content: `Hi, Karen. This is the St. John's Riverside virtual nurse, checking in to see how you're doing today. Are you ready for your follow-up conversation?`,
     },
   ];
 }
