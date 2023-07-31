@@ -7,7 +7,8 @@ export default function Scenarios() {
     <div>
       {/* <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur"> */}
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur">
-        <div className="container flex h-14 items-center">
+        {/* <div className="container flex h-16 items-center"> */}
+        <div className="container">
           <MainNav />
         </div>
       </header>
@@ -16,46 +17,15 @@ export default function Scenarios() {
   );
 }
 
-function IconLogo(props: React.HTMLAttributes<SVGElement>) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" {...props}>
-      <rect width="256" height="256" fill="none" />
-      <line
-        x1="208"
-        y1="128"
-        x2="128"
-        y2="208"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
-      />
-      <line
-        x1="192"
-        y1="40"
-        x2="40"
-        y2="192"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
-      />
-    </svg>
-  );
-}
-
 export function MainNav() {
   const pathname = useLocation().pathname;
 
   return (
-    <div className="mr-4 hidden md:flex">
-      <Link to="/scenarios" className="mr-6 flex items-center space-x-2">
-        <IconLogo className="h-6 w-6" />
-        <span className="hidden font-bold sm:inline-block">ContinueWell</span>
+    <div className="flex">
+      <Link to="/scenarios" className="mr-6">
+        <img src="/continue-well-logo.jpg" alt="ContinueWell" className="h-16"/>
       </Link>
-      <nav className="flex items-center space-x-6 text-sm font-medium">
+      <nav className="flex items-center space-x-6 font-medium mr-auto" >
         {scenarios.map((scenario) => {
           return (
             <Link
@@ -73,6 +43,7 @@ export function MainNav() {
           );
         })}
       </nav>
+      <img src="/sjrh-logo.png" alt="SJRH" className="h-16"/>
     </div>
   );
 }
