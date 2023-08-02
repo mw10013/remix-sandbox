@@ -48,6 +48,7 @@
     "@tailwindcss/typography": "^0.5.9",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
+    "dotenv": "^16.3.1",
     "eslint": "^8.44.0",
     "shadcn-ui": "^0.3.0",
     "supabase": "^1.77.9",

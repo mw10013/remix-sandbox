@@ -3,6 +3,10 @@
 
 - psql postgresql://postgres:postgres@localhost:54322/postgres
 
+## tsx
+
+- pnpm tsx ./scripts/cb-req.ts
+
 # Welcome to Remix!
 
 - [Remix Docs](https://remix.run/docs)
