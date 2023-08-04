@@ -101,6 +101,9 @@ dependencies:
   web-streams-polyfill:
     specifier: ^3.2.1
     version: 3.2.1
+  zod:
+    specifier: ^3.21.4
+    version: 3.21.4
 
 devDependencies:
   '@remix-run/dev':
