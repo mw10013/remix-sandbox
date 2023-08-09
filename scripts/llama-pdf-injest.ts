@@ -1,5 +1,5 @@
 import {
-  Document,
+  PDFReader,
   VectorStoreIndex,
   storageContextFromDefaults,
 } from "llamaindex";
@@ -8,24 +8,19 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-  const document = new Document({
-    text: `
-- Stable-World Principle
-  - Complex algorithms work best in well-defined, stable situations where large amounts of data are available. Human intenlligence has evolved to deal with uncertainty, independent of whether big or small data are available.`,
-  });
+  const reader = new PDFReader();
+  const documents = await reader.loadData(`${__dirname}/basb.pdf`);
 
+  // Had to delete llama-pdf-storage to prevent Error: Cannot initialize VectorStoreIndex with both nodes and indexStruct
   const storageContext = await storageContextFromDefaults({
     persistDir: `${__dirname}/llama-pdf-storage`,
   });
-  const index = await VectorStoreIndex.fromDocuments([document], {
+  const index = await VectorStoreIndex.fromDocuments(documents, {
     storageContext,
   });
 
   const queryEngine = index.asQueryEngine();
-  const response = await queryEngine.query(
-    "Summarize the stable-world principle"
-  );
-
+  const response = await queryEngine.query("Summarize");
   console.log(response.toString());
 }
 

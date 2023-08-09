@@ -12,7 +12,7 @@ async function main() {
   });
   const loadedQueryEngine = loadedIndex.asQueryEngine();
   const loadedResponse = await loadedQueryEngine.query(
-    "Summarize the stable-world principle"
+    "What are the main points?"
   );
   console.log(loadedResponse.toString());
 }
