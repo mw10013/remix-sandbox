@@ -1,6 +1,4 @@
-// @ts-ignore
 import * as readline from "node:readline/promises";
-// @ts-ignore
 import { stdin as input, stdout as output } from "node:process";
 import { FaissStore } from "langchain/vectorstores/faiss";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
@@ -41,14 +39,7 @@ async function main() {
       input,
     });
     console.log(result.output);
-    // console.log(result.toString());
   }
 }
-
-//   const result = await executor.call({
-//     input: "Hi, I'm Bob!"
-//   });
-
-//   console.log(result);
 
 main().catch(console.error);
