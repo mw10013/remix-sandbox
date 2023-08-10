@@ -49,7 +49,7 @@ dependencies:
     version: 2.32.0
   ai:
     specifier: ^2.1.26
-    version: 2.1.26(react@18.2.0)(solid-js@1.7.10)(svelte@4.1.2)(vue@3.3.4)
+    version: 2.1.26(react@18.2.0)(solid-js@1.7.11)(svelte@4.1.2)(vue@3.3.4)
   class-variance-authority:
     specifier: ^0.6.1
     version: 0.6.1
@@ -137,8 +137,8 @@ devDependencies:
     specifier: ^0.3.0
     version: 0.3.0
   supabase:
-    specifier: ^1.82.6
-    version: 1.82.6
+    specifier: ^1.83.7
+    version: 1.83.7
   tailwindcss:
     specifier: ^3.3.2
     version: 3.3.2
@@ -2987,8 +2987,8 @@ packages:
       - encoding
     dev: false
 
-  /@supabase/gotrue-js@2.46.1:
-    resolution: {integrity: sha512-tebFX3XvPqEJKHOVgkXTN20g9iUhLx6tebIYQvTggYTrqOT2af8oTpSBdgYzbwJ291G6P6CSpR6KY0cT9ade5A==}
+  /@supabase/gotrue-js@2.46.2:
+    resolution: {integrity: sha512-tLyZZNEb3St6Dxe671seLCzYWZ2DftSWWjPEfqAwW6kNOAr+Aw2uEIW0H3gEJxSIST+E+ly9lUBm/rGlfDWKPA==}
     dependencies:
       cross-fetch: 3.1.8
     transitivePeerDependencies:
@@ -3025,7 +3025,7 @@ packages:
     resolution: {integrity: sha512-1ShFhuOI5Du7604nlCelBsRD61daXk2O0qwjumoz35bqrYThnSPPtpJqZOHw6Mg6o7mLjIInYLh/DBlh8UvzRg==}
     dependencies:
       '@supabase/functions-js': 2.1.2
-      '@supabase/gotrue-js': 2.46.1
+      '@supabase/gotrue-js': 2.46.2
       '@supabase/postgrest-js': 1.8.0
       '@supabase/realtime-js': 2.7.3
       '@supabase/storage-js': 2.5.1
@@ -3596,7 +3596,7 @@ packages:
     resolution: {integrity: sha512-hCOfMzbFx5IDutmWLAt6MZwOUjIfSM9G9FyVxytmE4Rs/5YDPWQrD/+IR1w+FweD9H2oOZEnv36TmkjhNURBVA==}
     dev: true
 
-  /ai@2.1.26(react@18.2.0)(solid-js@1.7.10)(svelte@4.1.2)(vue@3.3.4):
+  /ai@2.1.26(react@18.2.0)(solid-js@1.7.11)(svelte@4.1.2)(vue@3.3.4):
     resolution: {integrity: sha512-WlE9zausBM6rFvBPpMNsu3MpRY3Q85x9ZsurPWCS0AQ613gTDyuunYTLcBY0+QYWtl2H/8SWx9vyCjgRwwXMqg==}
     engines: {node: '>=14.6'}
     peerDependencies:
@@ -3617,8 +3617,8 @@ packages:
       eventsource-parser: 1.0.0
       nanoid: 3.3.6
       react: 18.2.0
-      solid-js: 1.7.10
-      solid-swr-store: 0.10.7(solid-js@1.7.10)(swr-store@0.10.6)
+      solid-js: 1.7.11
+      solid-swr-store: 0.10.7(solid-js@1.7.11)(swr-store@0.10.6)
       sswr: 2.0.0(svelte@4.1.2)
       svelte: 4.1.2
       swr: 2.2.0(react@18.2.0)
@@ -9348,21 +9348,21 @@ packages:
       smart-buffer: 4.2.0
     dev: true
 
-  /solid-js@1.7.10:
-    resolution: {integrity: sha512-myc4UeC1DeQl4jfcA1bF0X4fUn3tDfHz7QGFMN9PJ77ldG7zzD0CtDz1a2u27gPBSFNjyNL/mJ0N9/6uCuh63A==}
+  /solid-js@1.7.11:
+    resolution: {integrity: sha512-JkuvsHt8jqy7USsy9xJtT18aF9r2pFO+GB8JQ2XGTvtF49rGTObB46iebD25sE3qVNvIbwglXOXdALnJq9IHtQ==}
     dependencies:
       csstype: 3.1.2
       seroval: 0.5.1
     dev: false
 
-  /solid-swr-store@0.10.7(solid-js@1.7.10)(swr-store@0.10.6):
+  /solid-swr-store@0.10.7(solid-js@1.7.11)(swr-store@0.10.6):
     resolution: {integrity: sha512-A6d68aJmRP471aWqKKPE2tpgOiR5fH4qXQNfKIec+Vap+MGQm3tvXlT8n0I8UgJSlNAsSAUuw2VTviH2h3Vv5g==}
     engines: {node: '>=10'}
     peerDependencies:
       solid-js: ^1.2
       swr-store: ^0.10
     dependencies:
-      solid-js: 1.7.10
+      solid-js: 1.7.11
       swr-store: 0.10.6
     dev: false
 
@@ -9573,8 +9573,8 @@ packages:
       pirates: 4.0.6
       ts-interface-checker: 0.1.13
 
-  /supabase@1.82.6:
-    resolution: {integrity: sha512-WpXFScfNodp7TGiJsCp70uEKu7kahvh/OkugjIyy6gVUMDPmXxQsvvg2doJfDIfzFL7b3osSccWmqfJ0h5Vy6g==}
+  /supabase@1.83.7:
+    resolution: {integrity: sha512-3YWwnJxtraDwKYnMFo+uElv4X7nbgZYS++b85ueGRsaAR73E+n5U31rBH34xyw+ob0rm9MPvVbMADqC8RbvFVQ==}
     engines: {npm: '>=8'}
     hasBin: true
     requiresBuild: true
