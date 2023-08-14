@@ -7,6 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { Mic, StopCircle } from "lucide-react";
+import { Button } from "~/components/ui/button";
 
 type State = "initializing" | "ready" | "recording" | "error";
 
@@ -71,12 +73,22 @@ export default function Route() {
         </CardHeader>
         <CardContent>
           <p>{state}</p>
-          <button disabled={state !== "ready"} onClick={record}>
-            Record
-          </button>
-          <button disabled={state !== "recording"} onClick={stop}>
-            Stop
-          </button>
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={state !== "ready"}
+            onClick={record}
+          >
+            <Mic className="h-8 w-8" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={state !== "recording"}
+            onClick={stop}
+          >
+            <StopCircle className="h-8 w-8" />
+          </Button>
           <audio controls src="/t-rex-roar.mp3" />
           {mediaBlobUrl && <audio controls src={mediaBlobUrl} />}
         </CardContent>
